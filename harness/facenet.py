@@ -169,106 +169,52 @@ def lfw_evaluate(embeddings, actual_issame, nrof_folds=10, distance_metric=0, su
         np.asarray(actual_issame), 1e-3, nrof_folds=nrof_folds, distance_metric=distance_metric, subtract_mean=subtract_mean)
     return tpr, fpr, accuracy, val, val_std, far
 
-from multiprocessing import Queue
-import threading
+def inference(lfw_dir, bmodel_path, batch_size, num_img, image_paths_array, emb_array):
+    """ Load a bmodel and do inference
+    bmodel_path: Path to bmodel
+    input_path: Path to input file
+    loops: Number of loops to run
+    tpu_id: ID of TPU to use
+    compare_path: Path to correct result file
+    """
+    loops = 1
+    tpu_id = 0
+    if os.path.isfile(bmodel_path):
+        net = SGInfer(bmodel_path)
+    else:
+        print("no bmodel!")
+        sys.exit(1)
 
-class Runner:
-    def __init__(self, bmodel, devices, lfw_dir, image_paths_array):
-        self.lfw_dir = lfw_dir
-        self.image_paths_array = image_paths_array
-        self.model = SGInfer(bmodel)
-        self.input_info = self.model.get_input_info()
-        self.embeddings = np.zeros((len(image_paths_array), 512))
-        self.batch_size = 1
-        self.batch_num = len(image_paths_array)
-        self.ids = dict()
-        self.result = []
-        self.q = Queue(maxsize=len(image_paths_array))
-        print('Preprocess on CPU...')
-        self.preprocess()
-        print('Preprocess finished. Inference begin...')
-        self.time_start = time.time()
-        self.time_sum = 0
-        self.relay = threading.Thread(target=self.relay)
-        self.relay.start()
-        self.post = threading.Thread(target=self.postprocess)
-        self.post.start()
-        self.join()
+    input_info = net.get_input_info()
+    input_info = next(iter(input_info.values()))
+    input_scale = input_info['scale']
+    is_fp32 = input_scale == 1
+    input_h = input_info['shape'][1]
+    input_w = input_info['shape'][2]
+    dtype = np.float32
+    status = True
+    batch_size = input_info['shape'][0]
+    assert num_img % batch_size == 0
+    epoc = int(num_img/batch_size)
+    img_array = np.zeros((batch_size,input_info['shape'][1],input_info['shape'][2],input_info['shape'][3]))
 
-    def preprocess(self):
-        input_info = next(iter(self.input_info.values()))
-        batch_size = input_info['shape'][0]
-        self.batch_size = batch_size
-        input_scale = input_info['scale']
-        is_fp32 = input_scale == 1
-        dtype=np.float32
-        num_img = len(self.image_paths_array)
-        epoc = int(num_img/batch_size)
-        self.batch_num = epoc
-        img_array = np.zeros((input_info['shape'][0],input_info['shape'][1],input_info['shape'][2],input_info['shape'][3]))
-
-        for i in range(epoc):
-            for j in range(batch_size):
-                fp = TarIO.TarIO(self.lfw_dir, self.image_paths_array[i*batch_size+j][0])
-                img = Image.open(fp)
-                img = np.asarray(img)
-                img = (img - 127.5)/128.0
-                if (i*batch_size+j) % 2 == 1:
-                    img = cv2.flip(img, 1)
-                img_array[j]=img
-            img_array = np.array(img_array, dtype=np.float32)
-            if not is_fp32:
-                img_array *= input_scale
-                dtype = np.int8
-            self.q.put((np.ascontiguousarray(img_array.astype(dtype)), i))
-
-    def relay(self):
-        try:
-            while True:
-                task = self.q.get()
-                if task is None:
-                    break
-                self._relay(task)
-        except Exception as err:
-            logging.error(f'Relay task failed, {err}')
-            raise
-
-    def _relay(self, task):
-        data, ids = task
-        task_id = self.model.put(data)
-        self.ids[task_id] = ids
-
-    def _postprocess(self):
-        arg_results = dict()
-        while True:
-            task_id, results, valid = self.model.get()
-            if task_id == 0:
-                break
-            self.result.append((task_id, results))
-
-    def postprocess(self):
-        try:
-            self._postprocess()
-        except Exception as err:
-            logging.error(f'Task postprocess failed, {err}')
-            raise
-
-    def join(self):
-        self.q.put(None)
-        self.relay.join()
-        self.model.put()
-        self.post.join()
-        self.time_end = time.time()
-        self.time_sum = self.time_end-self.time_start
-        print('Inference time: ',self.time_sum)
-
-    def get_output(self):
-        epoc = int(len(self.image_paths_array)/self.batch_size)
-        for task_id, results in self.result:
-            output = results[0]
-            i = self.ids[task_id]
-            self.embeddings[i*self.batch_size:i*self.batch_size+self.batch_size] = output
-        return self.embeddings.copy()
+    for i in range(epoc):
+        for j in range(batch_size):
+            fp = TarIO.TarIO(lfw_dir, image_paths_array[i*batch_size+j][0])
+            img = Image.open(fp)
+            img = np.asarray(img)
+            img = (img - 127.5)/128.0
+            if (i*batch_size+j) % 2 == 1:
+                img = cv2.flip(img, 1)
+            img_array[j]=img
+        input_data = np.array(img_array, dtype=np.float32)
+        if not is_fp32:
+            input_data *= input_scale
+            dtype = np.int8
+        task_id = net.put(input_data.astype(dtype))
+        task_id, results, valid = net.get()
+        emb_array[i*batch_size:i*batch_size+batch_size] = results[0]
+    return emb_array
 
 @harness('facenet')
 def harness_facenet(tree, config, args):
@@ -279,7 +225,7 @@ def harness_facenet(tree, config, args):
     batch_size = tree.expand_variables(config, args['batch_size'])
     lfw_nrof_folds = tree.expand_variables(config, args['lfw_nrof_folds'])
     name = tree.expand_variables(config, args['name'])
-    accuracy, infer_time = main(lfw_dir, lfw_pairs, bmodel, lfw_nrof_folds= lfw_nrof_folds, name=name)
+    accuracy = main(lfw_dir, lfw_pairs, bmodel, lfw_nrof_folds= lfw_nrof_folds, name=name)
     return {'accuracy':f'{accuracy:.2%}'}
 
 def main(lfw_dir, lfw_pairs, bmodel_path, devices=0, batch_size=4, lfw_nrof_folds=2, name='', distance_metric=1, use_flipped_images=True, subtract_mean=True, use_fixed_image_standardization=True):
@@ -299,9 +245,7 @@ def main(lfw_dir, lfw_pairs, bmodel_path, devices=0, batch_size=4, lfw_nrof_fold
     image_paths_array = np.expand_dims(np.repeat(np.array(paths), nrof_flips), 1)
     embedding_size = 512  
     emb_array = np.zeros((nrof_images, embedding_size))  # 24000*512
-    runner = Runner(
-        bmodel_path, devices, lfw_dir, image_paths_array)
-    emb_array = runner.get_output()
+    emb_array = inference(lfw_dir, bmodel_path, batch_size, nrof_images, image_paths_array, emb_array)
     print('Validation...')
     embeddings = np.zeros((nrof_embeddings, embedding_size * nrof_flips))  
 
@@ -316,7 +260,7 @@ def main(lfw_dir, lfw_pairs, bmodel_path, devices=0, batch_size=4, lfw_nrof_fold
                                                          subtract_mean=subtract_mean)
     print('Accuracy: %2.5f+-%2.5f' % (np.mean(accuracy), np.std(accuracy)))
     print('Validation rate: %2.5f+-%2.5f @ FAR=%2.5f' % (val, val_std, far))
-    return np.mean(accuracy), runner.time_sum
+    return np.mean(accuracy)
 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
