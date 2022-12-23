@@ -23,9 +23,13 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: nschloe/action-cached-lfs-checkout@f36573bae4ed2cd523d8f62f17415814eb491aac
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          clean: false
+          lfs: true
+
+      - run: git lfs pull --exclude '' --include '*'
 
       - name: Set Optional Env
         if: "${{ github.event_name == 'schedule' || \
