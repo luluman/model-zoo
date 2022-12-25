@@ -18,7 +18,7 @@ def lfw_read_pairs(pairs_filename):
         for line in f.readlines()[1:]:
             pair = line.strip().split()
             pairs.append(pair)
-    return np.array(pairs)
+    return pairs
 
 def add_extension(path, name_list):
     if path+'.jpg' in name_list:
