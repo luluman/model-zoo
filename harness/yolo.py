@@ -368,14 +368,16 @@ def process(bmodel, devices, imagedir, anno):
 
   with open('output/yolo.json','w') as f:
       json.dump(preds, f, indent=4)
+  return tested_file
 
+def calculate_map(anno, file_list):
   print("start MAP calculate...")
   #map test
   coco = COCO(anno)
   results = COCOResults('bbox')
   coco_dt = coco.loadRes('output/yolo.json')
   coco_eval = COCOeval(coco, coco_dt, 'bbox')
-  coco_eval.params.imgIds = [int(Path(x).stem) for x in tested_file if x.endswith('jpg')]
+  coco_eval.params.imgIds = [int(Path(x).stem) for x in file_list if x.endswith('jpg')]
   coco_eval.evaluate()
   coco_eval.accumulate()
   coco_eval.summarize()
@@ -389,7 +391,8 @@ def harness_yolo(tree, config, args):
   imagedir = tree.expand_variables(config, dataset_info['imagedir'])
   anno = tree.expand_variables(config, dataset_info['anno'])
   devices = tree.global_config['devices']
-  result = process(bmodel, devices, imagedir, anno)
+  tested_file = process(bmodel, devices, imagedir, anno)
+  result = calculate_map(anno, tested_file)
   output = result.results['bbox']
   return {k: f'{v:.2%}' for k, v in output.items()}
 
@@ -407,7 +410,8 @@ def main():
     type=int, nargs='*', help='Devices',
     default=[0])
   args = parser.parse_args()
-  result = process(args.bmodel, args.devices, args.imagedir, args.anno)
+  tested_file = process(args.bmodel, args.devices, args.imagedir, args.anno)
+  result = calculate_map(args.anno, tested_file)
   print(result)
 
 if __name__ == '__main__':
