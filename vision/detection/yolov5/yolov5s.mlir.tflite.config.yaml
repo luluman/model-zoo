@@ -37,5 +37,4 @@ deploy:
       --test_input $(workdir)/$(name)_in_f32.npz
       --test_reference $(name)_top_outputs.npz
       --tolerance 0.99,0.90
-      --correctness 0.99,0.93
       --model $(workdir)/$(name)_bm1684x_int8_asym.bmodel

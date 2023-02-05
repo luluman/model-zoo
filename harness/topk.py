@@ -212,7 +212,7 @@ def harness_main(tree, config, args):
     devices = tree.global_config['devices']
     runner = Runner(
         bmodel, devices, val_path, list_file, pre_config,
-        args.get('threads', 8))
+        args.get('threads', 2))
     runner.join()
     return runner.get_stats()
 

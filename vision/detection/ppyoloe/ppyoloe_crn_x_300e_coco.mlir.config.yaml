@@ -1,0 +1,58 @@
+---
+
+name: ppyoloe_crn_s_300e_coco
+gops: 17.37
+shapes:
+  - [1, 3, 640, 640]
+
+mlir_transform:
+  model_transform.py
+    --model_name $(name)
+    --model_def $(home)/ppyoloe_crn_s_300e_coco.onnx
+    --test_input $(root)/dataset/samples/dog.jpg
+    --input_shapes [$(shape_param)]
+    --mean=123.675,116.28,103.53
+    --scale=0.0171,0.0175,0.0174
+    --pixel_format rgb
+    --output_names p2o.Concat.31,p2o.Concat.29
+    --test_result $(name)_top_outputs.npz
+    --mlir $(workdir)/transformed.mlir
+
+# mlir_calibration:
+#   run_calibration.py $(workdir)/transformed.mlir
+#     --dataset $(coco2017_mlir_cali_set)
+#     --input_num 100
+#     -o $(workdir)/$(name).calitable
+
+deploy:
+  - model_deploy.py  --mlir $(workdir)/transformed.mlir
+      --quantize F32
+      --chip bm1684x
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.99,0.99
+      --model $(workdir)/$(name)_bm1684x_f32.bmodel
+  - model_deploy.py --mlir $(workdir)/transformed.mlir
+      --quantize F16
+      --chip bm1684x
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.95,0.85
+      --model $(workdir)/$(name)_bm1684x_f16.bmodel
+  - model_deploy.py --mlir $(workdir)/transformed.mlir
+      --quantize BF16
+      --chip bm1684x
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.95,0.85
+      --model $(workdir)/$(name)_bm1684x_bf16.bmodel
+  - model_deploy.py --mlir $(workdir)/transformed.mlir
+      --quantize INT8
+      --calibration_table $(home)/ppyoloe_crn_s_300e_coco_cali_table
+      --chip bm1684x
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.87,0.44
+      --quant_input
+      --quant_output
+      --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel

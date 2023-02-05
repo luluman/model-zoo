@@ -1,7 +1,7 @@
 ---
 
 name: pp_humanseg_lite_mini
-gops: 10.21
+gops: 0.217
 
 model: $(home)/pp_humanseg_lite_mini_supervisely/
 
@@ -28,7 +28,7 @@ time_only_cali:
 int8_model: $(workdir)/$(name)_bmpaddle_deploy_int8_unique_top.prototxt
 int8_weight: $(workdir)/$(name)_bmpaddle.int8umodel
 
-bmnetu_batch_sizes: [1]
+bmnetu_batch_sizes: [1, 4]
 bmnetu_options:
   --model $(int8_model)
   --weight $(int8_weight)

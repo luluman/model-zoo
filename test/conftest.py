@@ -79,13 +79,34 @@ class ExpandParser(HTMLParser):
             self.results.append(attrs.get('href'))
 
 def get_latest_tpu_perf():
-    resp = requests.get('https://github.com/sophgo/tpu-perf/releases')
+    backoff = 0.5
+    url = 'https://github.com/sophgo/tpu-perf/releases'
+    for i in range(10):
+        try:
+            resp = requests.get(url, timeout=15)
+            break
+        except requests.exceptions.Timeout:
+            logging.warning(f'Failed to query {url}, retry after {backoff}s')
+            time.sleep(backoff)
+            backoff *= 2
+    assert resp
+
     resp.raise_for_status()
     parser = ReleasePageParser()
     parser.feed(resp.text)
 
     page = parser.results[0]
-    resp = requests.get(page)
+    backoff = 0.5
+    for i in range(10):
+        try:
+            resp = requests.get(page, timeout=15)
+            break
+        except requests.exceptions.Timeout:
+            logging.warning(f'Failed to query {page}, retry after {backoff}s')
+            time.sleep(backoff)
+            backoff *= 2
+    assert resp
+
     resp.raise_for_status()
     parser = ExpandParser()
     parser.feed(resp.text)
@@ -157,6 +178,13 @@ def nntc_docker(latest_tpu_perf_whl):
 
 import subprocess
 
+def git_commit_id(rev):
+    p = subprocess.run(
+        f'git rev-parse {rev}',
+        shell=True, check=True,
+        capture_output=True)
+    return p.stdout.decode().strip(' \n')
+
 def git_commit_parents(rev='HEAD'):
     p = subprocess.run(
         f'git rev-parse {rev}^@',
@@ -164,40 +192,38 @@ def git_commit_parents(rev='HEAD'):
         capture_output=True)
     return p.stdout.decode().strip(' \n').split()
 
+def dig(c, callback, depth=0, max_depth=100):
+    if not callback(c):
+        return
+    if depth >= max_depth:
+        return
+    for p in git_commit_parents(c):
+        dig(p, callback, depth + 1, max_depth)
+
 def get_relevant_commits():
     head_parents = git_commit_parents()
     if len(head_parents) == 1:
         return ['HEAD']
     assert len(head_parents) == 2
-    branch_a_is_good = branch_b_is_good = True
-    ap, bp = a, b = head_parents
-    al, bl = [], []
-    while True:
-        if branch_a_is_good:
-            al.append(ap)
-            parents = git_commit_parents(ap)
-            if len(parents) > 1:
-                branch_a_is_good = False
-                al = None
-            else:
-                if b == parents[0]:
-                    bl = None
-                    break
-                ap = parents[0]
 
-        if branch_b_is_good:
-            bl.append(bp)
-            parents = git_commit_parents(bp)
-            if len(parents) > 1:
-                branch_b_is_good = False
-                bl = None
-            else:
-                if a == parents[0]:
-                    al = None
-                    break
-                bp = parents[0]
-    assert al or bl, 'PR commits are diverged'
-    return al if al is not None else bl
+    base_set = set()
+    def cb(x):
+        if x in base_set:
+            return False
+        base_set.add(x)
+        return True
+    dig(git_commit_id('origin/main'), cb)
+
+    ps = [p for p in head_parents if p not in base_set]
+    result = []
+    while ps:
+        result += ps
+        new_ps = []
+        for p in ps:
+            new_ps += [new_p for new_p in git_commit_parents(p) if new_p not in base_set]
+        ps = new_ps
+
+    return result
 
 def git_changed_files(rev):
     p = subprocess.run(
@@ -263,11 +289,15 @@ def get_cifar100():
     data_server = os.environ.get('DATA_SERVER')
     assert data_server
     fn = 'cifar-100-python.tar.gz'
-    url = os.path.join(data_server, fn)
-    logging.info(f'Downloading {fn}')
-    cmd = f'curl -s {url} | tar -zx --strip-components=1 ' \
-         '-C dataset/CIFAR100/cifar-100-python/'
-    execute_cmd(cmd)
+
+    if len(os.listdir('dataset/CIFAR100/cifar-100-python/')) >= 5:
+        logging.info(f'{fn} already downloaded')
+    else:
+        url = os.path.join(data_server, fn)
+        logging.info(f'Downloading {fn}')
+        cmd = f'curl -s {url} | tar -zx --strip-components=1 ' \
+             '-C dataset/CIFAR100/cifar-100-python/'
+        execute_cmd(cmd)
 
 @pytest.fixture(scope='session')
 def get_imagenet_val():
@@ -275,33 +305,44 @@ def get_imagenet_val():
     assert data_server
     fn = 'ILSVRC2012_img_val.tar'
     url = os.path.join(data_server, fn)
+    dst = 'dataset/ILSVRC2012/ILSVRC2012_img_val/'
+    if len(os.listdir(dst)) >= 50000:
+        logging.info(f'{fn} already downloaded')
+        return
     logging.info(f'Downloading {fn}')
-    cmd = f'curl -s {url} | tar -x -C dataset/ILSVRC2012/ILSVRC2012_img_val/'
+    cmd = f'curl -s {url} | tar -x -C {dst}'
     execute_cmd(cmd)
 
 @pytest.fixture(scope='session')
 def get_coco2017_val():
     data_server = os.environ.get('DATA_SERVER')
     assert data_server
+
     fn = 'val2017.zip'
     url = os.path.join(data_server, fn)
-    logging.info(f'Downloading {fn}')
-    cmd = f'curl -o val2017.zip -s {url}'
-    execute_cmd(cmd)
-    cmd = 'unzip -o val2017.zip -d dataset/COCO2017'
-    execute_cmd(cmd)
-    cmd = 'rm val2017.zip'
-    execute_cmd(cmd)
+    if len(os.listdir('dataset/COCO2017/val2017')) >= 5000:
+        logging.info(f'{fn} realdy downloaded')
+    else:
+        logging.info(f'Downloading {fn}')
+        cmd = f'curl -o val2017.zip -s {url}'
+        execute_cmd(cmd)
+        cmd = 'unzip -o val2017.zip -d dataset/COCO2017'
+        execute_cmd(cmd)
+        cmd = 'rm val2017.zip'
+        execute_cmd(cmd)
 
     fn = 'annotations_trainval2017.zip'
-    url = os.path.join(data_server, fn)
-    logging.info(f'Downloading {fn}')
-    cmd = f'curl -o annotations.zip -s {url}'
-    execute_cmd(cmd)
-    cmd = 'unzip -o annotations.zip -d dataset/COCO2017/'
-    execute_cmd(cmd)
-    cmd = 'rm annotations.zip'
-    execute_cmd(cmd)
+    if len(os.listdir('dataset/COCO2017/annotations')) >= 7:
+        logging.info(f'{fn} realdy downloaded')
+    else:
+        url = os.path.join(data_server, fn)
+        logging.info(f'Downloading {fn}')
+        cmd = f'curl -o annotations.zip -s {url}'
+        execute_cmd(cmd)
+        cmd = 'unzip -o annotations.zip -d dataset/COCO2017/'
+        execute_cmd(cmd)
+        cmd = 'rm annotations.zip'
+        execute_cmd(cmd)
 
 def main():
     logging.basicConfig(level=logging.INFO)
