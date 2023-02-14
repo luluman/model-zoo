@@ -18,18 +18,16 @@ def container_run(nntc_env, cmd):
 
     assert ret == 0
 
-@pytest.fixture(scope='module')
-def test_efficiency(nntc_env):
-    if not nntc_env['case_list']:
-        logging.info(f'Skip efficiency test')
-        return
-    container_run(nntc_env, f'python3 -m tpu_perf.build --time {nntc_env["case_list"]}')
-
-@pytest.mark.usefixtures('test_efficiency')
-def test_accuracy(nntc_env, get_imagenet_val, get_cifar100, get_coco2017_val):
+@pytest.mark.parametrize('target', ['BM1684', 'BM1684X'])
+def test_accuracy(target, nntc_env, get_imagenet_val, get_cifar100, get_coco2017_val):
     if not nntc_env['case_list']:
         logging.info(f'Skip nntc accuracy test')
         return
+
+    # Build for efficiency test
+    container_run(nntc_env, f'python3 -m tpu_perf.build --time {nntc_env["case_list"]} --outdir out_{target} --target {target}')
+
+    # Build for accuracy test
     container_run(nntc_env, 'pip3 install -r /workspace/requirements.txt')
     container_run(nntc_env, f'python3 -m tpu_perf.make_lmdb {nntc_env["case_list"]}')
-    container_run(nntc_env, f'python3 -m tpu_perf.build {nntc_env["case_list"]}')
+    container_run(nntc_env, f'python3 -m tpu_perf.build {nntc_env["case_list"]} --outdir out_{target} --target {target}')

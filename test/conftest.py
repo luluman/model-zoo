@@ -122,10 +122,11 @@ def latest_tpu_perf_whl():
     return f'https://github.com/{tpu_perf_whl}'
 
 import shutil
+import glob
 def remove_tree(path):
-    if os.path.exists(path):
-        logging.info(f'Removing {path}')
-        shutil.rmtree(path)
+    for match in glob.glob(path):
+        logging.info(f'Removing {match}')
+        shutil.rmtree(match)
 
 @pytest.fixture(scope='session')
 def nntc_docker(latest_tpu_perf_whl):
@@ -135,7 +136,7 @@ def nntc_docker(latest_tpu_perf_whl):
     root = os.path.dirname(os.path.dirname(__file__))
     logging.info(f'Working dir {root}')
     os.chdir(root)
-    remove_tree('./build')
+    remove_tree('out*')
 
     # Download
     ftp_server = os.environ.get('FTP_SERVER')
@@ -160,7 +161,7 @@ def nntc_docker(latest_tpu_perf_whl):
         tty=True, detach=True)
     logging.info(f'Setting up NNTC')
     ret, _ = nntc_container.exec_run(
-        'bash -c "source /workspace/tpu-nntc*/scripts/envsetup.sh"',
+        f'bash -c "source /workspace/{nntc_dir}/scripts/envsetup.sh"',
         tty=True)
     assert ret == 0
 
@@ -172,9 +173,9 @@ def nntc_docker(latest_tpu_perf_whl):
     logging.info(f'Removing NNTC container {nntc_container.name}')
     nntc_container.remove(v=True, force=True)
 
-    remove_tree('./build')
-    remove_tree('./data')
-    remove_tree(nntc_dir)
+    remove_tree('out*')
+    remove_tree('data')
+    remove_tree('tpu-nntc*')
 
 import subprocess
 
@@ -321,7 +322,7 @@ def get_coco2017_val():
     fn = 'val2017.zip'
     url = os.path.join(data_server, fn)
     if len(os.listdir('dataset/COCO2017/val2017')) >= 5000:
-        logging.info(f'{fn} realdy downloaded')
+        logging.info(f'{fn} already downloaded')
     else:
         logging.info(f'Downloading {fn}')
         cmd = f'curl -o val2017.zip -s {url}'
@@ -333,7 +334,7 @@ def get_coco2017_val():
 
     fn = 'annotations_trainval2017.zip'
     if len(os.listdir('dataset/COCO2017/annotations')) >= 7:
-        logging.info(f'{fn} realdy downloaded')
+        logging.info(f'{fn} already downloaded')
     else:
         url = os.path.join(data_server, fn)
         logging.info(f'Downloading {fn}')
