@@ -4,7 +4,6 @@ import time
 import os
 import sys
 import math
-from scipy import interpolate
 from sklearn.model_selection import KFold
 from tpu_perf.infer import SGInfer
 from tpu_perf.harness import harness
@@ -145,8 +144,7 @@ def facenet_calculate_val(thresholds, embeddings1, embeddings2, actual_issame, f
         for threshold_idx, threshold in enumerate(thresholds):
             _, far_train[threshold_idx] = calculate_val_far(threshold, dist[train_set], actual_issame[train_set])
         if np.max(far_train)>=far_target:
-            f = interpolate.interp1d(far_train, thresholds, kind='slinear')
-            threshold = f(far_target)
+            threshold = np.interp(far_target, far_train, thresholds, left=None, right=None, period=None)
         else:
             threshold = 0.0
     
