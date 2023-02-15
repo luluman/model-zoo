@@ -29,6 +29,10 @@ class FTPClient:
             self.user, self.passwd = None, None
         self.host = prog.sub('', url)
 
+        self.release_type = 'daily_build'
+        if os.environ.get('GITHUB_REF', '').endswith('stable'):
+            self.release_type = 'release_build'
+
         self.session = FTP(self.host, user=self.user, passwd=self.passwd)
 
     def download_and_untar(self, fn):
@@ -42,7 +46,7 @@ class FTPClient:
         tar.extractall()
 
     def get_nntc(self):
-        path = '/sophon-sdk/tpu-nntc/daily_build/latest_release'
+        path = f'/sophon-sdk/tpu-nntc/{self.release_type}/latest_release'
         self.session.cwd(path)
         fn = next(filter(lambda x: x.startswith('tpu-nntc_'), self.session.nlst()))
         logging.info(f'Latest nntc package is {fn}')
@@ -150,6 +154,12 @@ def nntc_docker(latest_tpu_perf_whl):
     image = 'sophgo/tpuc_dev:latest'
     pull_image(client, image)
 
+    # Glob kernel module
+    import glob
+    kernel_module = glob.glob(os.path.join(nntc_dir, 'lib/*kernel_module*'))
+    assert kernel_module
+    kernel_module = kernel_module[0]
+
     # NNTC container
     nntc_container = client.containers.run(
         image, 'bash',
@@ -157,8 +167,14 @@ def nntc_docker(latest_tpu_perf_whl):
         restart_policy={'Name': 'always'},
         environment=[
             f'PATH=/workspace/{nntc_dir}/bin:/usr/local/bin:/usr/bin:/bin',
+            f'BMCOMPILER_KERNEL_MODULE_PATH=/workspace/{kernel_module}',
             f'NNTC_TOP=/workspace/{nntc_dir}'],
         tty=True, detach=True)
+
+    if 'GITHUB_ENV' in os.environ:
+        with open(os.environ['GITHUB_ENV'], 'a') as f:
+            f.write(f'NNTC_CONTAINER={nntc_container.name}\n')
+
     logging.info(f'Setting up NNTC')
     ret, _ = nntc_container.exec_run(
         f'bash -c "source /workspace/{nntc_dir}/scripts/envsetup.sh"',
@@ -236,6 +252,9 @@ def git_changed_files(rev):
 from functools import reduce
 @pytest.fixture(scope='session')
 def case_list():
+    if os.environ.get('TEST_CASES'):
+        return os.environ['TEST_CASES']
+
     if os.environ.get('FULL_TEST'):
         return '--full'
 

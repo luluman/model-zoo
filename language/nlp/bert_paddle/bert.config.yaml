@@ -13,5 +13,5 @@ fp_compile_options:
     --descs "[0,int32,0,5],[1,int32,0,2]"
     --output_names "linear_147.tmp_1"
     --net_name $(name)
-    --target BM1684
+    --target $(target)
     --enable_profile True

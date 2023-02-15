@@ -16,5 +16,10 @@ function quiet_exec()
     }
 }
 
+if [ ! -z $1 ]; then
+    echo "Testing \"$1\""
+    export TEST_CASES=$1
+fi
+
 quiet_exec pip3 install -r test/requirements.txt
 python3 -m pytest test

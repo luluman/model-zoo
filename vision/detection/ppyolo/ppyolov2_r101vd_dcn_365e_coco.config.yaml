@@ -5,6 +5,8 @@ gops: 181.97
 
 model: $(home)/ppyolov2_r101vd_dcn_365e_coco/
 
+time_rounds: 1
+
 fp_compile_options:
   python3 -m bmpaddle
     --model $(model)
@@ -13,7 +15,7 @@ fp_compile_options:
     --input_names "im_shape,image,scale_factor"
     --descs "[0,fp32,640,640],[2,fp32,1,1]"
     --output_names "matrix_nms_0.tmp_0,matrix_nms_0.tmp_2"
-    --target BM1684X
+    --target $(target)
     --enable_profile True
 
 # time_only_cali:
@@ -25,7 +27,7 @@ fp_compile_options:
 #     --input_descs="[0,fp32,640,640];[2,fp32,1,1]"
 #     --net_name=$(name)
 #     --cali_iterations=1
-#     --target=BM1684X
+#     --target=$(target)
 #     --test_iterations=1
 #     --debug_cmd="use_fake_data_to_test;not_suspend;not_call_bmnetu"
 
@@ -36,7 +38,7 @@ fp_compile_options:
 # bmnetu_options:
 #   --model $(int8_model)
 #   --weight $(int8_weight)
-#   --target BM1684X
+#   --target $(target)
 #   --enable_profile True
 
 # precision: false

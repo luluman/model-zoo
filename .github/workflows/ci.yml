@@ -8,7 +8,15 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     # UTC time 22:30
-    - cron: '30 22 * * *'
+    # Wednesday and Saturday
+    - cron: '30 22 * * 3,6'
+  workflow_dispatch:
+    inputs:
+      cases:
+        description: 'Cases to run'
+        default: ''
+        required: false
+        type: string
 
 jobs:
   test:
@@ -29,7 +37,8 @@ jobs:
           clean: false
           lfs: true
 
-      - run: git lfs pull --exclude '' --include '*'
+      - name: LFS Pull
+        run: git lfs pull --exclude '' --include '*'
 
       - name: Set Optional Env
         if: "${{ github.event_name == 'schedule' || \
@@ -40,4 +49,9 @@ jobs:
         run: |
           echo "FULL_TEST=true" >> $GITHUB_ENV
 
-      - run: .github/workflows/test_build.sh
+      - name: Test
+        run: ".github/workflows/test_build.sh ${{ inputs.cases }}"
+
+      - name: Cleanup
+        if: ${{ cancelled() || failure() }}
+        run: .github/workflows/cleanup.sh
