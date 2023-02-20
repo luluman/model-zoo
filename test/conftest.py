@@ -151,7 +151,7 @@ def nntc_docker(latest_tpu_perf_whl):
 
     # Docker init
     client = docker.from_env()
-    image = 'sophgo/tpuc_dev:latest'
+    image = 'sophgo/tpuc_dev:v2.1'
     pull_image(client, image)
 
     # Glob kernel module
