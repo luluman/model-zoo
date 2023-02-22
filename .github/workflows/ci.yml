@@ -14,7 +14,7 @@ on:
     inputs:
       cases:
         description: 'Cases to run'
-        default: ''
+        default: '--full'
         required: false
         type: string
 
@@ -24,7 +24,7 @@ jobs:
     name: Test Model Compiling
     runs-on: build
     environment: testing
-    timeout-minutes: 1080
+    timeout-minutes: 10080
 
     steps:
       ##########################
