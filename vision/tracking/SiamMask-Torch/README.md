@@ -11,7 +11,7 @@ SiamMask is a simple real-time method for visual object tracking and semi-superv
 |Model                 |Download                              |DAVIS2016 (J / F)     |DAVIS2017 (J / F)    |Speed (FPS)          |
 |----------------------|:-------------------------------------|:---------------------|:--------------------|:--------------------|
 |SiamMask(pytorch)     |[83MB](SiamMask_DAVIS_trace.pt)       |0.713 / 0.674         |0.543 / 0.585        |56                   |
-
+|SiamMask(onnx)        |[66MB](SiamMask_DAVIS.onnx)           |0.713 / 0.674         |0.543 / 0.585        |56                   |
 ## Dataset
 
 * Youtube-VOS

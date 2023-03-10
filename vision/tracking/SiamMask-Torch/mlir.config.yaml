@@ -1,0 +1,53 @@
+---
+
+name: SiamMask
+gops: [37.566]
+shapes:
+  - [[1, 3, 127, 127], [1, 3, 255, 255]]
+
+mlir_transform:
+  model_transform.py
+    --model_name $(name)
+    --model_def $(home)/SiamMask_DAVIS.onnx
+    --test_input $(root)/dataset/npz_input/Siammask.npz
+    --input_shapes [$(shape_param)]
+    --test_result $(name)_top_outputs.npz
+    --mlir $(workdir)/transformed.mlir
+
+# mlir_calibration:
+#  run_calibration.py $(workdir)/transformed.mlir
+#    --dataset $(root)(your_own_caliset)
+#    --input_num 1
+#    -o $(workdir)/calitable
+
+deploy:
+  - model_deploy.py  --mlir $(workdir)/transformed.mlir
+      --quantize F32
+      --chip bm1684x
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.99,0.99
+      --model $(workdir)/$(name)_bm1684x_f32.bmodel
+  - model_deploy.py --mlir $(workdir)/transformed.mlir
+      --quantize F16
+      --chip bm1684x
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.98,0.98
+      --model $(workdir)/$(name)_bm1684x_f16.bmodel
+  - model_deploy.py --mlir $(workdir)/transformed.mlir
+      --quantize BF16
+      --chip bm1684x
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.98,0.91
+      --model $(workdir)/$(name)_bm1684x_bf16.bmodel
+  - model_deploy.py --mlir $(workdir)/transformed.mlir
+      --quantize INT8
+      --calibration_table $(home)/calitable
+      --chip bm1684x
+      --asymmetric
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.96,0.73
+      --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel

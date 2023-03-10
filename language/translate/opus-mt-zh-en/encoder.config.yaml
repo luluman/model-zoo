@@ -1,0 +1,21 @@
+---
+
+name: opus-mt-zh-en-encoder
+gops: 0.388627976
+
+model: $(home)/opus-mt-zh-en-encoder.onnx
+
+time: true
+runtime_cmp: false
+
+BM1684X:
+  fp_compile_options:
+    python3 -m bmneto
+    --model $(model)
+    --shapes [[1,512],[1,512]]
+    --target $(target)
+    --enable_profile True
+    --opt 1
+    --dyn True
+    --cmp 0
+    --descs "[0, int64, 0, 65000], [1, int64, 1, 2]"

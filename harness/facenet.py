@@ -167,7 +167,7 @@ def lfw_evaluate(embeddings, actual_issame, nrof_folds=10, distance_metric=0, su
         np.asarray(actual_issame), 1e-3, nrof_folds=nrof_folds, distance_metric=distance_metric, subtract_mean=subtract_mean)
     return tpr, fpr, accuracy, val, val_std, far
 
-def inference(lfw_dir, bmodel_path, batch_size, num_img, image_paths_array, emb_array):
+def inference(lfw_dir, bmodel_path, tpu_id, batch_size, num_img, image_paths_array, emb_array):
     """ Load a bmodel and do inference
     bmodel_path: Path to bmodel
     input_path: Path to input file
@@ -176,9 +176,8 @@ def inference(lfw_dir, bmodel_path, batch_size, num_img, image_paths_array, emb_
     compare_path: Path to correct result file
     """
     loops = 1
-    tpu_id = 0
     if os.path.isfile(bmodel_path):
-        net = SGInfer(bmodel_path)
+        net = SGInfer(bmodel_path, devices = tpu_id)
     else:
         print("no bmodel!")
         sys.exit(1)
@@ -198,6 +197,8 @@ def inference(lfw_dir, bmodel_path, batch_size, num_img, image_paths_array, emb_
 
     for i in range(epoc):
         for j in range(batch_size):
+
+
             fp = TarIO.TarIO(lfw_dir, image_paths_array[i*batch_size+j][0])
             img = Image.open(fp)
             img = np.asarray(img)
@@ -220,13 +221,12 @@ def harness_facenet(tree, config, args):
     lfw_dir = tree.expand_variables(config, args['lfw_dir'])
     lfw_pairs = tree.expand_variables(config, args['lfw_pairs'])
     bmodel = tree.expand_variables(config, args['bmodel'])
-    batch_size = tree.expand_variables(config, args['batch_size'])
-    lfw_nrof_folds = tree.expand_variables(config, args['lfw_nrof_folds'])
+    tpu_id = tree.global_config['devices']
     name = tree.expand_variables(config, args['name'])
-    accuracy = main(lfw_dir, lfw_pairs, bmodel, lfw_nrof_folds= lfw_nrof_folds, name=name)
+    accuracy = main(lfw_dir, lfw_pairs, bmodel, tpu_id= tpu_id, name=name)
     return {'accuracy':f'{accuracy:.2%}'}
 
-def main(lfw_dir, lfw_pairs, bmodel_path, devices=0, batch_size=4, lfw_nrof_folds=2, name='', distance_metric=1, use_flipped_images=True, subtract_mean=True, use_fixed_image_standardization=True):
+def main(lfw_dir, lfw_pairs, bmodel_path, tpu_id=[0], batch_size=4, lfw_nrof_folds=10, name='', distance_metric=1, use_flipped_images=True, subtract_mean=True, use_fixed_image_standardization=True):
 
     name_list = []
     with tarfile.open(lfw_dir) as ft:
@@ -243,7 +243,7 @@ def main(lfw_dir, lfw_pairs, bmodel_path, devices=0, batch_size=4, lfw_nrof_fold
     image_paths_array = np.expand_dims(np.repeat(np.array(paths), nrof_flips), 1)
     embedding_size = 512  
     emb_array = np.zeros((nrof_images, embedding_size))  # 24000*512
-    emb_array = inference(lfw_dir, bmodel_path, batch_size, nrof_images, image_paths_array, emb_array)
+    emb_array = inference(lfw_dir, bmodel_path, tpu_id, batch_size, nrof_images, image_paths_array, emb_array)
     print('Validation...')
     embeddings = np.zeros((nrof_embeddings, embedding_size * nrof_flips))  
 
@@ -269,8 +269,8 @@ def parse_arguments(argv):
                         help='The file containing the pairs to use for validation.', default='data/pairs.txt')
     parser.add_argument('--bmodel', type=str,
                         help='Path to bmodel.', default='./compilation.bmodel')
-    parser.add_argument('--devices', type=int,
-                        help='device id.', default=0)
+    parser.add_argument('--tpu_id', '-d', type=int, nargs='*', help='Devices',
+        default=[0])
     parser.add_argument('--batch_size', type=int,
                         help='Batch size.', default=4)
     parser.add_argument('--lfw_nrof_folds', type=int,

@@ -1,0 +1,15 @@
+# genetated time: 2023-02-22 12:48:30.454745
+# histogram number: 2048
+# sample number: 1
+# tune number: 5
+###
+# op_name    threshold    min    max
+input.1 2047.0000000 9.0000000 2047.0000000
+/embed/Gather_output_0_Gather 3.8327000 -3.7839999 3.8327000
+/gru/GRU_output_0_GRU 0.4249630 -0.4249630 0.4081094
+/gru/Squeeze_output_0_Squeeze 0.4249630 -0.4249630 0.4081094
+/Transpose_output_0_Transpose 0.4249630 -0.4249630 0.4081094
+/MaxPool_output_0_MaxPool 0.4249630 -0.4249630 0.4081094
+/Squeeze_output_0_Squeeze 0.4249630 -0.4249630 0.4081094
+/Tanh_output_0_Tanh 0.4011032 -0.4011032 0.3868662
+101_Gemm 0.1456082 -0.1347886 0.1456082

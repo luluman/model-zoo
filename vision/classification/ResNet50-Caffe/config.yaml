@@ -6,6 +6,19 @@ gops: 7.73
 model: $(home)/ResNet-50-deploy.prototxt
 weight: $(home)/ResNet-50-model.caffemodel
 
+BM1684X:
+  fp_loops:
+    - build_env: [  ]
+      fp_outdir_template: "{}b.fp32.compilation"
+      prec: FP32
+    - build_env:
+        - BMCOMPILER_LAYER_DTYPE_MODE=auto
+      fp_outdir_template: "{}b.fp16.compilation"
+      prec: FP16
+
+BM1684:
+  fp_outdir_template: "{}b.fp32.compilation"
+
 fp_compile_options:
   bmnetc
     --model $(model)
@@ -49,7 +62,7 @@ cali:
 int8_model: $(workdir)/$(name)_bmnetc_deploy_int8_unique_top.prototxt
 int8_weight: $(workdir)/$(name)_bmnetc.int8umodel
 
-bmnetu_batch_sizes: [1, 4]
+bmnetu_batch_sizes: [1, 4, 8, 16]
 bmnetu_options:
   --model $(int8_model)
   --weight $(int8_weight)
@@ -62,6 +75,6 @@ harness:
   type: topk
   args:
     - name: FP32
-      bmodel: $(workdir)/1b.fp.compilation/compilation.bmodel
+      bmodel: $(workdir)/1b.fp32.compilation/compilation.bmodel
     - name: INT8
       bmodel: $(workdir)/1b.compilation/compilation.bmodel

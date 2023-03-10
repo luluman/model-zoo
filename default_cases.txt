@@ -1,7 +1,3 @@
 vision/classification/LeNet
-vision/classification/inception_v4
+vision/classification/MobileNet-Caffe-v2
 vision/classification/ResNet50-Caffe
-vision/detection/yolov5
-vision/segmentation/paddle_humansegv1_lite
-vision/reid/market_bot_R50
-vision/detection/retinaface

@@ -150,6 +150,7 @@ def link_markdown(path):
 def leaf_dir_should_have_readme(path):
     has_readme = False
     has_child = False
+    has_config = False
     for fn in os.listdir(path):
         sub = os.path.join(path, fn)
         if os.path.isdir(sub):
@@ -157,7 +158,9 @@ def leaf_dir_should_have_readme(path):
             leaf_dir_should_have_readme(sub)
         elif os.path.isfile(sub) and fn.endswith('.md'):
             has_readme = True
-    assert has_child or has_readme, \
+        elif os.path.isfile(sub) and fn.endswith('config.yaml'):
+            has_config = True
+    assert has_child or not has_config or has_readme, \
         f'Please provide a README.md in {path}'
 
 def all_model_should_be_in_cases_list(path):
@@ -172,7 +175,7 @@ def all_model_should_be_in_cases_list(path):
         assert model in full_set, f'Please add {model} to full_cases.txt'
 
 def lint_markdowns(path):
-    #leaf_dir_should_have_readme(path)
+    leaf_dir_should_have_readme(path)
     for fn in walk(path):
         if not fn.endswith('.md'):
             continue

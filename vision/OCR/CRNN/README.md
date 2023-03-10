@@ -11,6 +11,7 @@ CRNN, proposed by Baoguang Shi et al. in 2015, is a combination of CNN, RNN and 
 |Model            |Download                        |
 |-----------------|:-------------------------------|
 | CRNN(pytorch)   |[32MB](crnn.pt)                 |
+| CRNN(ONNX)      |[32MB](crnn.onnx)               |
 
 ## Dataset
 

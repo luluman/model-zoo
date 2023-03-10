@@ -1,0 +1,45 @@
+---
+
+name: PP-OCRv3_det
+
+gops: [5.558682168]
+shapes:
+  - [1, 3, 960, 608]
+
+mlir_transform:
+  model_transform.py 
+    --model_name $(name) 
+    --model_def $(home)/ch_PP-OCRv3_det_infer.onnx 
+    --input_shapes [[1,3,960,608]] 
+    --mean 0.0,0.0,0.0 
+    --scale 0.0039216,0.0039216,0.0039216 
+    --keep_aspect_ratio 
+    --pixel_format rgb 
+    --output_names sigmoid_0.tmp_0 
+    --test_input $(root)/dataset/samples/dog.jpg 
+    --test_result $(workdir)/$(name)_top_outputs.npz 
+    --mlir $(workdir)/$(name).mlir
+
+#run_calibration.py ch_PP-OCRv3_det_infer.mlir \
+#  --dataset ../ILSVRC2012 \
+#  --input_num 100 \
+#  -o det_cali_table
+
+deploy:
+  - model_deploy.py 
+      --mlir $(workdir)/$(name).mlir 
+      --quantize F32 
+      --chip bm1684x 
+      --test_input $(workdir)/$(name)_in_f32.npz 
+      --test_reference $(workdir)/$(name)_top_outputs.npz 
+      --model $(workdir)/$(name)_1684x_f32.bmodel
+
+#  - model_deploy.py 
+#      --mlir $(workdir)/$(name).mlir 
+#      --quantize INT8 
+#      --calibration_table $(home)/det_cali_table 
+#      --chip bm1684x 
+#      --test_input $(workdir)/$(name)_in_f32.npz 
+#      --test_reference $(workdir)/$(name)_top_outputs.npz 
+#      --tolerance 0.85,0.45 
+#      --model $(workdir)/$(name)_1684x_int8_sym.bmodel  
