@@ -12,6 +12,7 @@ tasks and benchmarks as well as across a spectrum of different model sizes.
 | Model           | Download                                       | Shape(hw) |
 | --------------- |:---------------------------------------------- |:--------- |
 | mobileseg       | [7.42MB](mobileseg_mobilenetv2_cityscapes.zip) | 640 320   |
+| mobileseg       | [7.42MB](mobileseg.onnx)                       | 640 320   |
 
 ## Dataset
 
