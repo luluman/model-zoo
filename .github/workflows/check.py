@@ -168,6 +168,8 @@ def all_model_should_be_in_cases_list(path):
         full = [line.strip(' \n') for line in f.readlines() if line]
         full_set = set(full)
         assert len(full) == len(full_set)
+    for case in full_set:
+        assert os.path.isdir(case), f'Case {case} does not exist'
     for fn in walk(path):
         if not fn.endswith('config.yaml'):
             continue
