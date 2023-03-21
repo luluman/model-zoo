@@ -13,29 +13,47 @@ batch_sizes: [1, 4, 8, 16]
 int8_model: $(workdir)/$(name)_bmnetc_deploy_int8_unique_top.prototxt
 int8_weight: $(workdir)/$(name)_bmnetc.int8umodel
 
-fp_loops:
-  - build_env: [  ]
-    opt: "1"
-    dyn: "False"
-    fp_outdir_template: "static.opt1.fp32.{}b.compilation"
-    prec: FP32
-  - build_env: [  ] 
-    opt: "2"
-    dyn: "True"
-    fp_outdir_template: "dynamic.opt2.fp32.{}b.compilation"
-    prec: FP32
-  - build_env:
-      - BMCOMPILER_LAYER_DTYPE_MODE=auto
-    opt: "1"
-    dyn: "False"
-    fp_outdir_template: "static.opt1.fp16.{}b.compilation"
-    prec: FP16
-  - build_env:
-      - BMCOMPILER_LAYER_DTYPE_MODE=auto
-    opt: "2"
-    dyn: "True"
-    fp_outdir_template: "dynamic.opt2.fp16.{}b.compilation"
-    prec: FP16
+BM1684:
+  fp_loops:
+    - build_env:
+        - BMCOMPILER_GROUP_SEARCH_COUNT=1
+      opt: "1"
+      dyn: "False"
+      fp_outdir_template: "static.opt1.fp32.{}b.compilation"
+      prec: FP32
+    - build_env:
+        - BMCOMPILER_GROUP_SEARCH_COUNT=1
+      opt: "2"
+      dyn: "True"
+      fp_outdir_template: "dynamic.opt2.fp32.{}b.compilation"
+      prec: FP32
+
+BM1684X:
+  fp_loops:
+    - build_env:
+        - BMCOMPILER_GROUP_SEARCH_COUNT=1
+      opt: "1"
+      dyn: "False"
+      fp_outdir_template: "static.opt1.fp32.{}b.compilation"
+      prec: FP32
+    - build_env:
+        - BMCOMPILER_GROUP_SEARCH_COUNT=1
+      opt: "2"
+      dyn: "True"
+      fp_outdir_template: "dynamic.opt2.fp32.{}b.compilation"
+      prec: FP32
+    - build_env:
+        - BMCOMPILER_GROUP_SEARCH_COUNT=1
+      opt: "1"
+      dyn: "False"
+      fp_outdir_template: "static.opt1.fp16.{}b.compilation"
+      prec: FP16
+    - build_env:
+        - BMCOMPILER_GROUP_SEARCH_COUNT=1
+      opt: "2"
+      dyn: "True"
+      fp_outdir_template: "dynamic.opt2.fp16.{}b.compilation"
+      prec: FP16
 
 int8_loops:
   - opt: "1"
