@@ -86,4 +86,3 @@ vision/detection/yolov3-torch
 vision/detection/yolov3_320
 vision/detection/yolov3_spp
 vision/detection/yolov3_608
-language/translate/opus-mt-zh-en
