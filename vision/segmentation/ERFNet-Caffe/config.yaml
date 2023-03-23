@@ -4,6 +4,7 @@ name: ERFNet
 gops: 55.720
 
 time: true
+time_rounds: 10
 
 model: $(home)/erfnet_deploy_mergebn.prototxt
 weight: $(home)/erfnet_cityscapes_mergebn.caffemodel
@@ -43,7 +44,7 @@ fp_compile_options:
     --shapes $(input_shapes)
     --net_name $(name)
     --target $(target)
-    --enable_profile true
+    --enable_profile false
 
 time_only_cali:
   python3 -m ufw.cali.cali_model
@@ -61,4 +62,4 @@ bmnetu_options:
   --model $(int8_model)
   --weight $(int8_weight)
   --target $(target)
-  --enable_profile True
+  --enable_profile False

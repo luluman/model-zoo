@@ -5,6 +5,8 @@ gops: 375.77
 
 model: $(home)/unet_plusplus_cityscapes/
 
+time_rounds: 10
+
 BM1684X:
   fp_compile_options:
     python3 -m bmpaddle
