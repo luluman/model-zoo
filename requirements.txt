@@ -2,4 +2,5 @@ opencv-python
 numpy
 pycocotools
 scikit-learn
-torchvision
+torch<=1.13+cpu
+torchvision<=0.14
