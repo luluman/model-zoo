@@ -13,6 +13,8 @@ academia help users conveniently build hands-on experiences in image
 segmentation.
 [website](https://github.com/PaddlePaddle/FastDeploy/tree/develop/examples/vision/segmentation/paddleseg)
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 |Model                |Download                              |Shape(hw)     |mIoU      |

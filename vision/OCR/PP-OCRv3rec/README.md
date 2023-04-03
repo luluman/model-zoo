@@ -8,6 +8,9 @@ The recognition module of PP-OCRv3 is optimized based on the text recognition
 algorithm SVTR. RNN is abandoned in SVTR, and the context information of the
 text line image is more effectively mined by introducing the Transformers
 structure, thereby improving the text recognition ability.
+
+It is recommended to use fastdeploy.
+
 [website](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/doc/doc_en/PP-OCRv3_introduction_en.md)
 
 ## Model

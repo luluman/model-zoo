@@ -5,6 +5,15 @@
     },
     {
       "pattern": "https://www.aishelltech.com"
+    },
+    {
+      "pattern": " https://proceedings.neurips.cc"
+    },
+    {
+      "pattern": "https://www.crcv.ucf.edu/data/UCF101.php"
+    },
+    {
+      "pattern": "http://alov300pp.joomlafree.it/"
     }
   ],
   "timeout": "20s",

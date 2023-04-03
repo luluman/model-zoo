@@ -1,0 +1,62 @@
+---
+name: tsm
+tiny_kinetic_dataset: $(home)/data/tiny-kinetics-400
+gops: [65.554]
+shapes:
+  - [[1, 3, 8, 224, 224]]
+
+mlir_transform:
+  model_transform.py
+    --model_name $(name)
+    --model_def $(home)/$(name).onnx
+    --output_names="output"
+    --input_shapes=$(shape_param)
+    --mlir $(name).mlir
+    --mean 123.93,116.28,103.53
+    --scale 0.01712475383,0.0175070028,0.01742919389
+
+# mlir_calibration:
+#   run_calibration.py $(workdir)/$(name).mlir
+#     --dataset $(tiny_kinetic_dataset)/tiny_kinetic_calibration/
+#     --input_num 1
+#     -o $(tiny_kinetic_dataset)/$(name)_cali_table
+BM1684X:
+  deploy:
+    - model_deploy.py
+      --mlir $(workdir)/$(name).mlir
+      --quantize F32
+      --chip $(target)
+      --test_input=$(tiny_kinetic_dataset)/input_$(name).npz
+      --test_reference=$(tiny_kinetic_dataset)/top_output_$(name).npz
+      --tolerance 0.99,0.99
+      --model $(name)_$(target)_f32.bmodel
+      --debug
+
+    - model_deploy.py
+        --mlir $(workdir)/$(name).mlir
+        --quantize F16
+        --chip $(target)
+        --test_input=$(tiny_kinetic_dataset)/input_$(name).npz
+        --test_reference=$(tiny_kinetic_dataset)/top_output_$(name).npz
+        --tolerance 0.95,0.85
+        --model $(name)_$(target)_f16.bmodel
+
+    - model_deploy.py
+        --mlir $(workdir)/$(name).mlir
+        --quantize BF16
+        --chip $(target)
+        --test_input=$(tiny_kinetic_dataset)/input_$(name).npz
+        --test_reference=$(tiny_kinetic_dataset)/top_output_$(name).npz
+        --tolerance 0.95,0.85
+        --model $(name)_$(target)_Bf16.bmodel
+
+# - model_deploy.py
+#   --mlir $(workdir)/$(name).mlir
+#   --quantize INT8
+#   --calibration_table $(tiny_kinetic_dataset)/$(name)_cali_table
+#   --chip $(target)
+#   --test_input=$(tiny_kinetic_dataset)/input_$(name).npz
+#   --test_reference=$(tiny_kinetic_dataset)/top_output_$(name).npz
+#   --quant_input
+#   --quant_output
+#   --model  $(name)_$(target)_int8_sym.bmodel

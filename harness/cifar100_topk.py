@@ -223,7 +223,7 @@ def main():
     parser.add_argument(
         '--mean', required=True, type=str, help='Mean value like 128,128,128')
     parser.add_argument(
-        '--scale', required=True, type=float, help='Float scale value')
+        '--scale', required=True, type=str, help='Scale value like 1,1,1')
     # parser.add_argument(
     #     '--size', required=True, type=int, help='Crop size. (Resized to 256 then crop)')
     parser.add_argument('--threads', type=int, default=4)
@@ -237,9 +237,10 @@ def main():
     mean = [float(v) for v in args.mean.split(',')]
     if len(mean) != 3:
         mean = mean[:1] * 3
+    scale = [float(v) for v in args.scale.split(',')]
     if len(scale) != 3:
         scale = scale[:1] * 3
-    config = dict(mean=mean, scale=args.scale)
+    config = dict(mean=mean, scale=scale)
     print(config)
     runner = Runner(args.bmodel, args.devices, args.image_path, config, args.threads)
     runner.join()

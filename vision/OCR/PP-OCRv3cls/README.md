@@ -14,6 +14,8 @@ At this time, only a 0 and 180 degree angle classification of the text is
 required, so the built-in PaddleOCR text angle classifier only supports 0 and
 180 degree classification.
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 | Model                            | Download                                      | Shape(hw) |

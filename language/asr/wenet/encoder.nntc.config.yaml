@@ -1,0 +1,46 @@
+---
+
+name: WenetEncoder
+gops: 1.6
+
+model: $(home)/encoder.onnx
+
+time: true
+runtime_cmp: false
+
+BM1684X:
+  time_rounds: 100
+  fp_loops:
+    - build_env: [ ]
+      fp_outdir_template: "{}b.fp32.compilation"
+      prec: FP32
+    - build_env:
+        - BMCOMPILER_LAYER_DTYPE_MODE=bf16
+      fp_outdir_template: "{}b.bf16.compilation"
+      prec: BF16
+
+  fp_compile_options:
+    python3 -m bmneto
+      --model $(model)
+      --shapes "[[1,67,80],[1],[1,1],[1,12,4,80,128],[1,12,256,7],[1,1,80]]"
+      --input_names "chunk_xs,chunk_lens,offset,att_cache,cnn_cache,cache_mask"
+      --descs "[1,int32,0,1000],[2,int64,0,1000]"
+      --target $(target)
+      --enable_profile True
+      --opt 2
+      --dyn False
+      --cmp 1
+
+BM1684:
+  time_rounds: 100
+  fp_compile_options:
+    python3 -m bmneto
+      --model $(model)
+      --shapes "[[1,67,80],[1],[1,1],[1,12,4,80,128],[1,12,256,7],[1,1,80]]"
+      --input_names "chunk_xs,chunk_lens,offset,att_cache,cnn_cache,cache_mask"
+      --descs "[1,int32,0,1000],[2,int64,0,1000]"
+      --target $(target)
+      --enable_profile True
+      --opt 2
+      --dyn False
+      --cmp 1

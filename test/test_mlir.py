@@ -1,25 +1,13 @@
 import logging
 import pytest
-import re
+from utils import container_run
 
-def container_run(mlir_env, cmd):
-    container = mlir_env['mlir_container']
-    logging.info(cmd)
-    ret, output = container.exec_run(
-        f'bash -c "{cmd}"',
-        tty=True)
-    output = output.decode()
-    logging.info(f'------>\n{output}')
-    m = re.search('(?<=please check ).+\\.log', output)
-    if m:
-        log_fn = m.group(0).replace('/workspace', '.')
-        with open(log_fn) as f:
-            logging.info(f'cat {log_fn}\n{f.read()}')
-
-    assert ret == 0
-
-def test_mlir_efficiency(mlir_env):
+@pytest.mark.build
+@pytest.mark.mlir
+@pytest.mark.parametrize('target', ['BM1684', 'BM1684X'])
+def test_mlir_efficiency(target, mlir_env, get_imagenet_val, get_cifar100, get_coco2017_val):
     if not mlir_env['case_list']:
         logging.info(f'Skip efficiency test')
         return
-    container_run(mlir_env, f'python3 -m tpu_perf.build --mlir {mlir_env["case_list"]} --outdir mlir_out')
+
+    container_run(mlir_env, f'python3 -m tpu_perf.build {mlir_env["case_list"]} --outdir mlir_out_{target} --target {target} --mlir')

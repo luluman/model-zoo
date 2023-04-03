@@ -9,6 +9,8 @@ excellent performance, our models are very suitable for deployment on mobile or
 CPU. For more details, please refer to our [report on arXiv](https://arxiv.org/abs/2111.00902).
 [website](https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.5/configs/picodet)
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 |Model                |Download                              |Shape(hw)     |mAP(0.5:0.95)      |

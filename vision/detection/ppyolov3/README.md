@@ -6,6 +6,8 @@
 
 The PaddlePaddle version of YOLOv3.
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 | Model                         | Download                                   | Shape(hw) |

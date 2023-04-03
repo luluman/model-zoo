@@ -25,38 +25,38 @@ mlir_calibration:
     --input_num 100
     -o $(workdir)/$(name).lcali_table
 
-deploy:
-  - model_deploy.py  --mlir $(workdir)/transformed.mlir
-      --quantize F32
-      --chip bm1684x
-      --test_input $(workdir)/$(name)_in_f32.npz
-      --test_reference $(name)_top_outputs.npz
-      --tolerance 0.99,0.99
-      --model $(workdir)/$(name)_bm1684x_f32.bmodel
-  - model_deploy.py --mlir $(workdir)/transformed.mlir
-      --quantize INT8
-      --calibration_table $(workdir)/$(name).lcali_table
-      --chip bm1684x
-      --test_reference $(name)_top_outputs.npz
-      --tolerance 0.95,0.68
-      --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel
-  - model_deploy.py --mlir $(workdir)/transformed.mlir
-      --quantize INT8
-      --asymmetric
-      --calibration_table $(workdir)/$(name).lcali_table
-      --chip bm1684x
-      --test_reference $(name)_top_outputs.npz
-      --tolerance 0.90,0.54
-      --model $(workdir)/$(name)_bm1684x_int8_asym.bmodel
-dataset:
-  imagedir: $(coco2017_val_set)
-  anno: $(coco2017_anno)/instances_val2017.json
+BM1684X:
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/transformed.mlir
+        --quantize F32
+        --chip bm1684x
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.99,0.99
+        --model $(workdir)/$(name)_bm1684x_f32.bmodel
+    - model_deploy.py --mlir $(workdir)/transformed.mlir
+        --quantize INT8
+        --calibration_table $(workdir)/$(name).lcali_table
+        --chip bm1684x
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.95,0.68
+        --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel
+    - model_deploy.py --mlir $(workdir)/transformed.mlir
+        --quantize INT8
+        --asymmetric
+        --calibration_table $(workdir)/$(name).lcali_table
+        --chip bm1684x
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.90,0.54
+        --model $(workdir)/$(name)_bm1684x_int8_asym.bmodel
+  dataset:
+    imagedir: $(coco2017_val_set)
+    anno: $(coco2017_anno)/instances_val2017.json
 
-
-harness:
-  type: yolo
-  args:
-    - name: FP32
-      bmodel: $(workdir)/$(name)_bm1684x_f32.bmodel
-    - name: INT8
-      bmodel: $(workdir)/$(name)_bm1684x_int8_asym.bmodel
+  harness:
+    type: yolo
+    args:
+      - name: FP32
+        bmodel: $(workdir)/$(name)_bm1684x_f32.bmodel
+      - name: INT8
+        bmodel: $(workdir)/$(name)_bm1684x_int8_asym.bmodel

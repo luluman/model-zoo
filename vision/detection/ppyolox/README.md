@@ -6,6 +6,8 @@
 
 YOLOX: Exceeding YOLO Series in 2021.
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 | Model                         | Download                                   | Shape(hw) |

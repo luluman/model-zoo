@@ -12,6 +12,8 @@ structure LK-PAN with large receptive field and the DML (Deep Mutual Learning)
 distillation strategy are proposed. When optimizing the student model, the FPN
 structure RSE-FPN with residual attention mechanism is proposed.
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 | Model                          | Download                              | Shape(hw) |

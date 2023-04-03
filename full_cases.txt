@@ -2,6 +2,7 @@ vision/OCR/PP-OCRv3det
 vision/OCR/PP-OCRv3cls
 vision/OCR/CRNN
 vision/OCR/OCRv3_paddle
+vision/OCR/DBNet
 vision/video-recognition/C3D
 vision/pose-estimation/openpose
 vision/classification/MobileNet-Caffe-v2
@@ -22,6 +23,12 @@ vision/classification/mobilenet-v2
 vision/classification/InceptionBN-21k-for-Caffe
 vision/classification/ResNeXt
 vision/classification/ResNet50_vd_paddle
+vision/classification/resnet18-v1-7
+vision/classification/resnet34-v1-7
+vision/classification/resnet50-v1-7
+vision/classification/res2net50_26w_4s
+vision/classification/res2net101_26w_4s
+vision/classification/WRN-50-2
 vision/super-resolution/SRCNN
 vision/super-resolution/VDSR
 vision/detection/ultralytics-yolov3
@@ -29,6 +36,7 @@ vision/detection/Yet-Another-EfficientDet-Pytorch
 vision/detection/yolov5
 vision/detection/py-R-FCN
 vision/detection/yolov3_tiny
+vision/detection/pointpillars
 vision/detection/ppyolo
 vision/detection/ppyoloe
 vision/detection/scrfd
@@ -46,6 +54,7 @@ vision/classification/mm_resnet50
 vision/classification/efficientnetv2
 vision/segmentation/unet_plusplus
 vision/recognition/facenet
+vision/recognition/face_alignment
 vision/recognition/arcface
 vision/segmentation/deeplabv3p
 vision/segmentation/mobileseg
@@ -56,6 +65,7 @@ vision/detection/retinaface
 language/nlp/bert
 language/nlp/bert_paddle
 language/asr/conformer
+language/asr/wenet
 vision/classification/AlexNet-Caffe
 vision/classification/inception_v1
 vision/classification/ECANet-Torch
@@ -86,3 +96,7 @@ vision/detection/yolov3-torch
 vision/detection/yolov3_320
 vision/detection/yolov3_spp
 vision/detection/yolov3_608
+vision/visual-counting/S-DCNet
+vision/classification/SwinTransformer
+vision/detection/lprnet
+vision/recognition/tsm

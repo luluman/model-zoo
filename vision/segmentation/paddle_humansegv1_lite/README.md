@@ -10,6 +10,8 @@ Generally, human segentation can be classified as portrait segmentation and gene
 For portrait segmentation and general human segmentation, PaddleSeg releases the PP-HumanSeg models, which has **good performance in accuracy, inference speed and robustness**. Besides, we can deploy PP-HumanSeg models to products without training
 Besides, PP-HumanSeg models can be deployed to products at zero cost, and it also support fine-tuning to achieve better performance.
 
+It is recommended to use fastdeploy.
+
 ## Model
 | Model                 | Download                              | Shape(hw) | mIou(%) |
 | --------------------- |:------------------------------------- |:--------- |:--------|

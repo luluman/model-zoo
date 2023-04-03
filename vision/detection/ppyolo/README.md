@@ -7,6 +7,8 @@
 PP-YOLO is a optimized model based on YOLOv3 in PaddleDetection，
 whose performance(mAP on COCO) and inference spped are better than YOLOv4.
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 | Model                         | Download                                   | Shape(hw) |

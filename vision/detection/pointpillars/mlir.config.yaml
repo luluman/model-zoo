@@ -1,0 +1,24 @@
+---
+
+name: pointpillars
+gops: 66.68
+shapes:
+  - [[7260, 32, 4], [7260], [7260, 4]]
+
+mlir_transform:
+  model_transform.py
+    --model_name $(name)
+    --model_def $(home)/pointpillars_kitti-3d-car.onnx
+    --input_shapes [$(shape_param)]
+    --test_input $(root)/dataset/npz_input/pointpillars_input.npz
+    --test_result $(name)_top_outputs.npz
+    --mlir $(workdir)/transformed.mlir
+
+BM1684X:
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/transformed.mlir
+        --quantize F32
+        --chip bm1684x
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --model $(workdir)/$(name)_bm1684x_f32.bmodel

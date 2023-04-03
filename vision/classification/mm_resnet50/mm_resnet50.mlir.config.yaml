@@ -19,45 +19,40 @@ mlir_transform:
     --test_result $(name)_top_outputs.npz
     --mlir $(workdir)/$(name).mlir
 
-# mlir_calibration:
-#   run_calibration.py $(workdir)/$(name).mlir
-#     --dataset $(cifar100_mlir_cali_set)
-#     --input_num 200
-#     -o $(home)/$(name)_cali_table
+mlir_calibration:
+  run_calibration.py $(workdir)/$(name).mlir
+    --dataset $(cifar100_mlir_cali_set)
+    --input_num 200
+    -o $(home)/$(name)_cali_table
 
 deploy:
   - model_deploy.py --mlir $(workdir)/$(name).mlir
       --quantize F32
-      --chip bm1684x
+      --chip $(target)
       --test_input $(workdir)/$(name)_in_f32.npz
       --test_reference $(name)_top_outputs.npz
       --tolerance 0.99,0.99
-      --model $(workdir)/$(name)_bm1684x_f32.bmodel
-  - model_deploy.py --mlir $(workdir)/$(name).mlir
-      --quantize F16
-      --chip bm1684x
-      --test_input $(workdir)/$(name)_in_f32.npz
-      --test_reference $(name)_top_outputs.npz
-      --tolerance 0.95,0.85
-      --model $(workdir)/$(name)_bm1684x_f16.bmodel
+      --model $(workdir)/$(name)_$(target)_f32.bmodel
   - model_deploy.py --mlir $(workdir)/$(name).mlir
       --quantize INT8
       --calibration_table $(home)/$(name)_cali_table
       --quant_input
       --quant_output
-      --chip bm1684x
+      --chip $(target)
       --test_input $(workdir)/$(name)_in_f32.npz
       --test_reference $(name)_top_outputs.npz
       --tolerance 0.98,0.85
-      --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel
-  - model_deploy.py --mlir $(workdir)/$(name).mlir
-      --quantize INT8
-      --asymmetric
-      --calibration_table $(home)/$(name)_cali_table
-      --quant_input
-      --quant_output
-      --chip bm1684x
-      --test_input $(workdir)/$(name)_in_f32.npz
-      --test_reference $(name)_top_outputs.npz
-      --tolerance 0.98,0.85
-      --model $(workdir)/$(name)_bm1684x_int8_asym.bmodel
+      --model $(workdir)/$(name)_$(target)_int8_sym.bmodel
+
+dataset:
+  image_path: $(cifar100_val_set)
+  mean: [129.304, 124.070, 112.434]
+  scale: [0.0146692093, 0.0152923905, 0.0142009145]
+
+harness:
+  type: cifar100_topk
+  args:
+    - name: FP32
+      bmodel: $(workdir)/$(name)_$(target)_f32.bmodel
+    - name: INT8
+      bmodel: $(workdir)/$(name)_$(target)_int8_sym.bmodel

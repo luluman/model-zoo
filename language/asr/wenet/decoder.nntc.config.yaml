@@ -1,0 +1,50 @@
+---
+
+name: WenetDecoder
+gops: 96.7
+
+model: $(home)/decoder.onnx
+
+time: true
+runtime_cmp: false
+
+BM1684X:
+  time_rounds: 100
+  fp_loops:
+    - build_env: [ ]
+      fp_outdir_template: "{}b.fp32.compilation"
+      prec: FP32
+    - build_env:
+        - BMCOMPILER_LAYER_DTYPE_MODE=bf16
+      fp_outdir_template: "{}b.bf16.compilation"
+      prec: BF16
+
+  fp_compile_options:
+    python3 -m bmneto
+      --model $(model)
+      --shapes "[[1,350,256],[1],[1,10,350],[1,10],[1,10,350],[1,10]]"
+      --input_names "encoder_out,encoder_out_lens,hyps_pad_sos_eos,
+        hyps_lens_sos,r_hyps_pad_sos_eos,ctc_score"
+      --descs "[1,int32,3,100],[2,int64,3,1000],
+          [3,int32,3,100],[4,int64,3,1000]"
+      --target $(target)
+      --enable_profile True
+      --opt 2
+      --dyn False
+      --cmp 0
+
+BM1684:
+  time_rounds: 100
+  fp_compile_options:
+    python3 -m bmneto
+      --model $(model)
+      --shapes "[[1,350,256],[1],[1,10,350],[1,10],[1,10,350],[1,10]]"
+      --input_names "encoder_out,encoder_out_lens,hyps_pad_sos_eos,
+        hyps_lens_sos,r_hyps_pad_sos_eos,ctc_score"
+      --descs "[1,int32,3,100],[2,int64,3,1000],
+          [3,int32,3,100],[4,int64,3,1000]"
+      --target $(target)
+      --enable_profile True
+      --opt 2
+      --dyn False
+      --cmp 0

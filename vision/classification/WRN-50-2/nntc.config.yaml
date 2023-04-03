@@ -1,0 +1,72 @@
+---
+name: WRN-50-2
+gops: 22.818
+
+model: $(home)/WRN-50-2.pb
+
+time: true
+precision: true
+
+fp_batch_sizes: [1, 2, 4, 8]
+
+fp_compile_options:
+  python3 -m bmnett
+    --model $(model)
+    --net_name $(name)
+    --input_names "Placeholder"
+    --shapes [1,224,224,3]
+    --target $(target)
+
+cali:
+  python3 -m ufw.cali.cali_model
+    --model=$(model)
+    --input_shapes="[1,224,224,3]"
+    --net_name=$(name)
+    --input_names=Placeholder
+    --output_names=add_16
+    --cali_iterations=100
+    --cali_image_path=$(imagenet2012_cali_set)
+    --cali_image_preprocess='resize_side=256;crop_h=224,crop_w=224;mean_value=123.675:116.28:103.53,scale=0.0171:0.0175:0.0174,bgr2rgb=True'
+    --target=$(target)
+    --test_iterations=1
+    --debug_cmd="not_suspend;not_call_bmnetu"
+    --postprocess_and_calc_score_class=topx_accuracy_for_classify
+
+time_only_cali:
+  python3 -m ufw.cali.cali_model
+    --model=$(model)
+    --input_shapes="[1,224,224,3]"
+    --net_name=$(name)
+    --input_names=Placeholder
+    --output_names=add_16
+    --cali_iterations=100
+    --target=$(target)
+    --test_iterations=1
+    --debug_cmd="not_call_bmnetu;not_suspend;use_fake_data_to_test"
+
+int8_model: $(workdir)/$(name)_bmnett_deploy_int8_unique_top.prototxt
+int8_weight: $(workdir)/$(name)_bmnett.int8umodel
+bmnetu_batch_sizes: [1, 2, 4, 8]
+bmnetu_options:
+  --model $(int8_model)
+  --weight $(int8_weight)
+  --target $(target)
+  --cmp False
+  --enable_profile True
+
+dataset:
+  image_path: $(imagenet2012_val_set)
+  image_label: $(imagenet2012_caffe_val_ground_truth)
+  mean: [123.675, 116.28, 103.53]
+  scale: [0.0171, 0.0175, 0.0174]
+  size: 224
+  trans: False
+  bgr2rgb: True
+
+harness:
+  type: efficientnetv2
+  args:
+    - name: FP32
+      bmodel: $(workdir)/1b.fp.compilation/compilation.bmodel
+    - name: INT8
+      bmodel: $(workdir)/1b.compilation/compilation.bmodel

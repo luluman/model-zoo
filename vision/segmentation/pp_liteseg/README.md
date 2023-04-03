@@ -6,6 +6,8 @@
 
 PP-LiteSeg is a novel lightweight model for the real-time semantic segmentation task.
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 | Model            | Download                                  | Shape(hw) |

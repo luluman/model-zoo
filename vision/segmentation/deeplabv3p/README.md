@@ -8,9 +8,10 @@ Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentatio
 
 ## Model
 
-| Model          | Download                                         | Shape(hw) |
-| -------------- |:------------------------------------------------ |:--------- |
-| deeplabv3p     | [94.8MB](deeplabv3p_resnet50_os8_cityscapes.zip) | 640 320   |
+| Model               | Download                                         | Shape(hw) |
+|---------------------|:-------------------------------------------------|:--------- |
+| deeplabv3p (paddle) | [94.8MB](deeplabv3p_resnet50_os8_cityscapes.zip) | 640 320   |
+| deeplabv3p (onnx)   | [102MB](deeplabv3p.onnx)                         | 640 320   |
 
 ## Dataset
 

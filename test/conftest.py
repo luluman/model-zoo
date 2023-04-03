@@ -1,13 +1,18 @@
 import pytest
 import logging
 import docker
+import time
 import os
+import uuid
 
 import re
 import io
 import tarfile
 import requests
 from ftplib import FTP
+import subprocess
+import utils
+
 class FTPClient:
     """
     ftp://user_name:password@hostname
@@ -37,29 +42,50 @@ class FTPClient:
         tar = tarfile.open(fileobj=buf)
         tar.extractall()
 
-    def get_nntc(self):
-        path = f'/sophon-sdk/tpu-nntc/{self.release_type}/latest_release'
-        self.session.cwd(path)
-        fn = next(filter(lambda x: x.startswith('tpu-nntc_'), self.session.nlst()))
-        logging.info(f'Latest nntc package is {fn}')
-        out_dir = fn.replace('.tar.gz', '')
-        if os.path.exists(out_dir):
-            logging.info(f'{out_dir} already exists')
+    def download(self, fn, out_dir):
+        out_fn = os.path.join(out_dir, os.path.basename(fn))
+        logging.info(f'Download {fn} to {out_fn}')
+        with open(out_fn, 'wb') as fp:
+            self.session.retrbinary(
+                f'RETR {fn}',
+                fp.write)
+        return out_fn
+
+    def get_release(self, name, get_fn=None, is_tar=False,is_dev=False):
+        if get_fn is None:
+            get_fn = lambda x: x.startswith(f'{name}_')
+        path = f'/sophon-sdk/{name}/{self.release_type}/latest_release'
+        self.session.cwd(path)  # current working directory
+        fn = next(filter(get_fn, self.session.nlst())) # filename
+        logging.info(f'Latest {name} package is {fn}')
+        if is_tar:
+            out_dir = fn.replace('.tar.gz', '')
+            if os.path.exists(out_dir):
+                logging.info(f'{out_dir} already exists')
+                return out_dir
+            self.download_and_untar(os.path.join(path, fn))
+            return out_dir
+        else:
+            self.download(os.path.join(path, fn), '.')
             return fn
-        self.download_and_untar(os.path.join(path, fn))
-        return fn
+
+    def get_tar(self, name):
+        out_dir = self.get_release(name, is_tar=True)
+        for m in glob.glob(f'{name}*'):
+            if m != out_dir:
+                remove_tree(m)
+        return out_dir
+
+    def get_nntc(self):
+        return self.get_tar('tpu-nntc')
 
     def get_mlir(self):
-        path = f'/sophon-sdk/tpu-mlir/{self.release_type}/latest_release'
-        self.session.cwd(path)
-        fn = next(filter(lambda x: x.startswith('tpu-mlir_'), self.session.nlst()))
-        logging.info(f'Latest mlir package is {fn}')
-        out_dir = fn.replace('.tar.gz', '')
-        if os.path.exists(out_dir):
-            logging.info(f'{out_dir} already exists')
-            return fn
-        self.download_and_untar(os.path.join(path, fn))
-        return fn
+        return self.get_tar('tpu-mlir')
+
+    def get_libsophon(self):
+        return self.get_release(
+            'libsophon',
+            get_fn=lambda x: x.startswith('sophon-libsophon_') and x.endswith('amd64.deb'), is_dev=True)
 
 from html.parser import HTMLParser
 
@@ -124,17 +150,45 @@ def get_latest_tpu_perf():
 tpu_perf_whl = None
 @pytest.fixture(scope='session')
 def latest_tpu_perf_whl():
+    import platform
+    arch = platform.machine()
     global tpu_perf_whl
     if not tpu_perf_whl:
-        tpu_perf_whl = next(filter(lambda x: 'x86' in x, get_latest_tpu_perf()))
+        tpu_perf_whl = next(filter(lambda x: arch in x, get_latest_tpu_perf()))
     return f'https://github.com/{tpu_perf_whl}'
 
 import shutil
 import glob
 def remove_tree(path):
-    for match in glob.glob(path):
-        logging.info(f'Removing {match}')
-        shutil.rmtree(match)
+    for m in glob.glob(path):
+        logging.info(f'Removing {m}')
+        if os.path.isdir(m):
+            shutil.rmtree(m)
+        else:
+            os.remove(m)
+
+dummy_github_output = '/tmp/dummy.github.output.txt'
+def read_github_output(key):
+    if 'GITHUB_OUTPUT' in os.environ:
+        return os.environ[key]
+    else:
+        with open(dummy_github_output) as f:
+            data = dict(
+                line.strip(' \n').split('=')
+                for line in f.readlines() if line)
+            return data[key]
+
+def write_github_output(key, value):
+    if 'GITHUB_OUTPUT' in os.environ:
+        mode = 'a'
+        output_fn = os.environ['GITHUB_OUTPUT']
+        logging.info(f'Writing {key} to GITHUB_OUTPUT')
+    else:
+        mode = 'w'
+        output_fn = dummy_github_output
+
+    with open(output_fn, mode) as f:
+        f.write(f'{key}={value}\n')
 
 @pytest.fixture(scope='session')
 def nntc_docker(latest_tpu_perf_whl):
@@ -144,14 +198,12 @@ def nntc_docker(latest_tpu_perf_whl):
     root = os.path.dirname(os.path.dirname(__file__))
     logging.info(f'Working dir {root}')
     os.chdir(root)
-    remove_tree('out*')
 
     # Download
     ftp_server = os.environ.get('FTP_SERVER')
     assert ftp_server
     f = FTPClient(ftp_server)
-    nntc_fn = f.get_nntc()
-    nntc_dir = nntc_fn.replace('.tar.gz', '')
+    nntc_dir = f.get_nntc()
 
     # Docker init
     client = docker.from_env()
@@ -179,6 +231,9 @@ def nntc_docker(latest_tpu_perf_whl):
         with open(os.environ['GITHUB_ENV'], 'a') as f:
             f.write(f'NNTC_CONTAINER={nntc_container.name}\n')
 
+    # Remove old outputs
+    nntc_container.exec_run(f'bash -c "rm -rf *out*"', tty=True)
+
     logging.info(f'Setting up NNTC')
     ret, _ = nntc_container.exec_run(
         f'bash -c "source /workspace/{nntc_dir}/scripts/envsetup.sh"',
@@ -187,15 +242,26 @@ def nntc_docker(latest_tpu_perf_whl):
 
     logging.info(f'NNTC container {nntc_container.name}')
 
-    yield dict(docker=client, nntc_container=nntc_container)
+    yield dict(docker=client, container=nntc_container)
+
+    # Chown so we can delete them later
+    dirs_to_remove = ['*.tar', '*out*', 'data']
+    nntc_container.exec_run(
+        f'bash -c "chown -R {os.getuid()} {" ".join(dirs_to_remove)}"',
+        tty=True)
+
+    # Pack bmodels for runtime jobs
+    model_tar = f'NNTC_{uuid.uuid4()}.tar'
+    for target in ['BM1684', 'BM1684X']:
+        upload_bmodel(target, model_tar, f'<(find out*_{target} -name \'*.compilation\' 2>/dev/null)')
+    write_github_output('NNTC_MODEL_TAR', model_tar)
 
     # Docker cleanup
     logging.info(f'Removing NNTC container {nntc_container.name}')
     nntc_container.remove(v=True, force=True)
 
-    remove_tree('out*')
-    remove_tree('data')
-    remove_tree('tpu-nntc*')
+    for d in dirs_to_remove:
+        remove_tree(d)
 
 @pytest.fixture(scope='session')
 def mlir_docker(latest_tpu_perf_whl):
@@ -205,15 +271,13 @@ def mlir_docker(latest_tpu_perf_whl):
     root = os.path.dirname(os.path.dirname(__file__))
     logging.info(f'Working dir {root}')
     os.chdir(root)
-    remove_tree('mlir_out*')
 
     # Download
     ftp_server = os.environ.get('FTP_SERVER')
     assert ftp_server
     f = FTPClient(ftp_server)
-    mlir_fn = f.get_mlir()
-    mlir_dir = mlir_fn.replace('.tar.gz', '')
-    logging.info(f'mlir_dir: {mlir_dir}')
+    mlir_dir = f.get_mlir()
+
     # Docker init
     client = docker.from_env()
     image = 'sophgo/tpuc_dev:latest'
@@ -226,6 +290,7 @@ def mlir_docker(latest_tpu_perf_whl):
         volumes=[f'{root}:/workspace'],
         restart_policy={'Name': 'always'},
         environment=[
+            f'TPUC_ROOT=/workspace/{mlir_dir}',
             f'PATH=/workspace/{mlir_dir}/bin:' \
             f'/workspace/{mlir_dir}/python/tools:' \
             f'/workspace/{mlir_dir}/python/utils:' \
@@ -236,22 +301,48 @@ def mlir_docker(latest_tpu_perf_whl):
             f'PYTHONPATH=/workspace/{mlir_dir}/python'],
         tty=True, detach=True)
 
+    # For cleanup jobs in case we fail
     if 'GITHUB_ENV' in os.environ:
         with open(os.environ['GITHUB_ENV'], 'a') as f:
             f.write(f'MLIR_CONTAINER={mlir_container.name}\n')
 
     logging.info(f'MLIR container {mlir_container.name}')
 
-    yield dict(docker=client, mlir_container=mlir_container)
+    # Remove old outputs
+    mlir_container.exec_run(f'bash -c "rm -rf *out*"', tty=True)
+
+    yield dict(docker=client, container=mlir_container)
+
+    # Pack bmodels for runtime jobs
+    model_tar = f'MLIR_{uuid.uuid4()}.tar'
+    for target in ['BM1684', 'BM1684X']:
+        relative_fns = set()
+        for dirpath, dirnames, filenames in os.walk(f'mlir_out_{target}'):
+            for fn in filenames:
+                if fn.endswith('compilation.bmodel'):
+                    continue
+                if fn.endswith('.bmodel') or fn.endswith('profile_0.txt'):
+                    relative_fns.add(os.path.join(dirpath, fn))
+                if fn.endswith('.dat'):
+                    relative_fns.add(dirpath)
+        list_fn = 'out_list.txt'
+        with open(list_fn, 'w') as f:
+            f.write('\n'.join(relative_fns))
+        upload_bmodel(target, model_tar, list_fn)
+    write_github_output('MLIR_MODEL_TAR', model_tar)
+
+    # Chown so we can delete them later
+    dirs_to_remove = ['*.tar', '*out*', 'data', '*list.txt']
+    mlir_container.exec_run(
+        f'bash -c "chown -R {os.getuid()} {" ".join(dirs_to_remove)}"',
+        tty=True)
 
     # Docker cleanup
     logging.info(f'Removing MLIR container {mlir_container.name}')
     mlir_container.remove(v=True, force=True)
 
-    remove_tree('mlir_out*')
-    remove_tree('tpu-mlir*')
-
-import subprocess
+    for d in dirs_to_remove:
+        remove_tree(d)
 
 def git_commit_id(rev):
     p = subprocess.run(
@@ -343,7 +434,7 @@ def case_list():
 
 @pytest.fixture(scope='session')
 def nntc_env(nntc_docker, latest_tpu_perf_whl, case_list):
-    ret, _ = nntc_docker['nntc_container'].exec_run(
+    ret, _ = nntc_docker['container'].exec_run(
         f'bash -c "pip3 install {latest_tpu_perf_whl}"',
         tty=True)
     assert ret == 0
@@ -354,7 +445,7 @@ def nntc_env(nntc_docker, latest_tpu_perf_whl, case_list):
 
 @pytest.fixture(scope='session')
 def mlir_env(mlir_docker, latest_tpu_perf_whl, case_list):
-    ret, _ = mlir_docker['mlir_container'].exec_run(
+    ret, _ = mlir_docker['container'].exec_run(
         f'bash -c "pip3 install {latest_tpu_perf_whl}"',
         tty=True)
     assert ret == 0
@@ -363,8 +454,88 @@ def mlir_env(mlir_docker, latest_tpu_perf_whl, case_list):
 
     yield dict(**mlir_docker, case_list=case_list)
 
+def pytest_addoption(parser):
+    parser.addoption('--target', action='store')
+
+@pytest.fixture(scope='session')
+def target(request):
+    return request.config.getoption('--target')
+
+import pandas as pd
+def check_output_csv():
+    csv_fns = glob.glob('*out*/*.csv')
+    if len(csv_fns) == 0:
+        logging.info('No .csv found!')
+    else:
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.width', 1000)
+        logging.info(f'Number of csvs: {len(csv_fns)}')
+        for fn in csv_fns:
+            runtime_out = pd.read_csv(fn, encoding='utf-8', header=0)
+            logging.info(f'{fn}\n{runtime_out}')
+
+def download_bmodel(target, model_tar):
+    assert model_tar, 'Model tar is empty'
+    assert target, 'Please specify --target'
+    assert 'SWAP_SERVER' in os.environ, 'SWAP_SERVER required'
+    swap_server = os.environ['SWAP_SERVER']
+
+    output_fn = f'{target}_{model_tar}'
+    logging.info(f'Downloading {output_fn}')
+    url = os.path.join(swap_server, output_fn)
+    cmd = f'curl -s {url} | tar -x'
+    execute_cmd(cmd)
+
+def upload_bmodel(target, model_tar, T):
+    fn = f'{target}_{model_tar}'
+    assert 'SWAP_SERVER' in os.environ, 'SWAP_SERVER required'
+    swap_server = os.environ['SWAP_SERVER']
+    logging.info(f'Uploading {fn}')
+    dst = os.path.join(swap_server, fn)
+    subprocess.run(
+        f'bash -c "tar -T {T} -cO | curl -s --fail {dst} -T - > /dev/null"',
+        shell=True, check=True)
+
+@pytest.fixture(scope='session')
+def runtime_dependencies(latest_tpu_perf_whl):
+    execute_cmd(f'pip3 install {latest_tpu_perf_whl} > /dev/null')
+    execute_cmd('pip3 install -r requirements.txt -i https://mirrors.cloud.tencent.com/pypi/simple > /dev/null')
+
+@pytest.fixture(scope='session')
+def mlir_runtime(runtime_dependencies, target, case_list):
+    model_tar = read_github_output('MLIR_MODEL_TAR')
+    assert model_tar, 'Model tar is empty'
+    download_bmodel(target, model_tar)
+    logging.info(f'Running cases "{case_list}"')
+
+    yield dict(case_list=case_list)
+
+    check_output_csv()
+
+    # Docker cleanup
+    dirs_to_remove = ['*.tar', '*out*', 'data']
+    for d in dirs_to_remove:
+        remove_tree(d)
+
+@pytest.fixture(scope='session')
+def nntc_runtime(runtime_dependencies, target, case_list):
+    model_tar = read_github_output('NNTC_MODEL_TAR')
+    assert model_tar, 'Model tar is empty'
+    download_bmodel(target, model_tar)
+    logging.info(f'Running cases "{case_list}"')
+
+    yield dict(case_list=case_list)
+
+    check_output_csv()
+
+    # Docker cleanup
+    dirs_to_remove = ['*.tar', '*out*', 'data']
+    for d in dirs_to_remove:
+        remove_tree(d)
 
 def execute_cmd(cmd):
+    logging.info(cmd)
     ret = os.system(cmd)
     assert ret == 0, f'{cmd} failed!'
 

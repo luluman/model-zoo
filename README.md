@@ -1,4 +1,4 @@
-# Open Pre-Trained Models [![Test](https://github.com/sophgo/model-zoo/actions/workflows/ci.yml/badge.svg?event=schedule)](https://github.com/sophgo/model-zoo/actions/workflows/ci.yml)
+# Open Pre-Trained Models [![Test NNTC](https://github.com/sophgo/model-zoo/actions/workflows/nntc.yml/badge.svg?branch=main&event=schedule)](https://github.com/sophgo/model-zoo/actions/workflows/nntc.yml) [![Test MLIR](https://github.com/sophgo/model-zoo/actions/workflows/mlir.yml/badge.svg?event=schedule)](https://github.com/sophgo/model-zoo/actions/workflows/mlir.yml)
 
 ## Usage - Compile and run
 
@@ -42,3 +42,145 @@ yamllint -c ./.yaml-lint.yml .
 markdownlint '**/*.md'
 python3 .github/workflows/check.py
 ```
+
+## Model Navigation
+
+### Vision
+
+|Model                            |Path                                                                                                  |NNTC                |MLIR                |
+|:-                               |:-                                                                                                    |:-                  |:-                  |
+|alexnet                          |[vision/classification/AlexNet-Caffe](vision/classification/AlexNet-Caffe)                            |:white\_check\_mark:|                    |
+|arcface                          |[vision/recognition/arcface](vision/recognition/arcface)                                              |                    |:white\_check\_mark:|
+|c3d                              |[vision/video-recognition/C3D](vision/video-recognition/C3D)                                          |:white\_check\_mark:|                    |
+|CenterNet                        |[vision/detection/CenterNet-Torch](vision/detection/CenterNet-Torch)                                  |:white\_check\_mark:|                    |
+|CRNN                             |[vision/OCR/CRNN](vision/OCR/CRNN)                                                                    |:white\_check\_mark:|                    |
+|cyclegan\_horse2zebra            |[vision/GAN/cyclegan](vision/GAN/cyclegan)                                                            |:white\_check\_mark:|                    |
+|DBNet\_totaltext\_res18\_dcn     |[vision/OCR/DBNet](vision/OCR/DBNet)                                                                  |:white\_check\_mark:|                    |
+|DBNet\_totaltext\_res50\_dcn     |[vision/OCR/DBNet](vision/OCR/DBNet)                                                                  |:white\_check\_mark:|                    |
+|deeplabv3p                       |[vision/segmentation/deeplabv3p](vision/segmentation/deeplabv3p)                                      |:white\_check\_mark:|:white\_check\_mark:|
+|densenet                         |[vision/classification/DenseNet-Caffe](vision/classification/DenseNet-Caffe)                          |:white\_check\_mark:|                    |
+|dpn68                            |[vision/classification/dpn68](vision/classification/dpn68)                                            |:white\_check\_mark:|:white\_check\_mark:|
+|ECANet                           |[vision/classification/ECANet-Torch](vision/classification/ECANet-Torch)                              |:white\_check\_mark:|                    |
+|efficientnet-B0                  |[vision/classification/EfficientNet-B0](vision/classification/EfficientNet-B0)                        |:white\_check\_mark:|                    |
+|efficientnet-B1                  |[vision/classification/EfficientNet-B1](vision/classification/EfficientNet-B1)                        |:white\_check\_mark:|                    |
+|efficientnet-B4                  |[vision/classification/EfficientNet-B4](vision/classification/EfficientNet-B4)                        |:white\_check\_mark:|                    |
+|efficientnet-B5                  |[vision/classification/EfficientNet-B5](vision/classification/EfficientNet-B5)                        |:white\_check\_mark:|                    |
+|efficientnet-B7                  |[vision/classification/EfficientNet-B7](vision/classification/EfficientNet-B7)                        |:white\_check\_mark:|                    |
+|efficientnet-lite4               |[vision/classification/efficientnet-lite4](vision/classification/efficientnet-lite4)                  |                    |:white\_check\_mark:|
+|efficientnetv2                   |[vision/classification/efficientnetv2](vision/classification/efficientnetv2)                          |:white\_check\_mark:|:white\_check\_mark:|
+|ERFNet                           |[vision/segmentation/ERFNet-Caffe](vision/segmentation/ERFNet-Caffe)                                  |:white\_check\_mark:|                    |
+|face\_alignment                  |[vision/recognition/face\_alignment](vision/recognition/face_alignment)                               |                    |:white\_check\_mark:|
+|facenet                          |[vision/recognition/facenet](vision/recognition/facenet)                                              |:white\_check\_mark:|                    |
+|GOTURN                           |[vision/tracking/GOTURN-Caffe](vision/tracking/GOTURN-Caffe)                                          |:white\_check\_mark:|                    |
+|HRNet                            |[vision/classification/HRNet-Torch](vision/classification/HRNet-Torch)                                |:white\_check\_mark:|                    |
+|inception\_resnet\_v2            |[vision/classification/inception\_resnet\_v2](vision/classification/inception_resnet_v2)              |:white\_check\_mark:|                    |
+|inception\_v1                    |[vision/classification/inception\_v1](vision/classification/inception_v1)                             |:white\_check\_mark:|                    |
+|inception\_v3                    |[vision/classification/inception\_v3](vision/classification/inception_v3)                             |:white\_check\_mark:|                    |
+|inception\_v4                    |[vision/classification/inception\_v4](vision/classification/inception_v4)                             |:white\_check\_mark:|                    |
+|inception\_v4-tflite             |[vision/classification/inception\_v4](vision/classification/inception_v4)                             |                    |:white\_check\_mark:|
+|inceptionBN21k                   |[vision/classification/InceptionBN-21k-for-Caffe](vision/classification/InceptionBN-21k-for-Caffe)    |:white\_check\_mark:|                    |
+|lenet                            |[vision/classification/LeNet](vision/classification/LeNet)                                            |:white\_check\_mark:|                    |
+|lprnet                           |[vision/detection/lprnet](vision/detection/lprnet)                                                    |                    |:white\_check\_mark:|
+|market\_bot\_R50                 |[vision/reid/market\_bot\_R50](vision/reid/market_bot_R50)                                            |:white\_check\_mark:|:white\_check\_mark:|
+|MDNet                            |[vision/tracking/MDNet-Torch](vision/tracking/MDNet-Torch)                                            |:white\_check\_mark:|                    |
+|mm\_resnet50                     |[vision/classification/mm\_resnet50](vision/classification/mm_resnet50)                               |                    |:white\_check\_mark:|
+|mobilenet-v2                     |[vision/classification/mobilenet-v2](vision/classification/mobilenet-v2)                              |                    |:white\_check\_mark:|
+|mobilenet\_v1                    |[vision/classification/MobileNet-Caffe-v1](vision/classification/MobileNet-Caffe-v1)                  |:white\_check\_mark:|                    |
+|mobilenetv2                      |[vision/classification/MobileNet-Caffe-v2](vision/classification/MobileNet-Caffe-v2)                  |:white\_check\_mark:|                    |
+|mobilenetv3                      |[vision/classification/MobileNet-Caffe-v3](vision/classification/MobileNet-Caffe-v3)                  |:white\_check\_mark:|                    |
+|mobileseg                        |[vision/segmentation/mobileseg](vision/segmentation/mobileseg)                                        |:white\_check\_mark:|                    |
+|mobileseg-mlir                   |[vision/segmentation/mobileseg](vision/segmentation/mobileseg)                                        |                    |:white\_check\_mark:|
+|mtcnn\_onet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
+|mtcnn\_pnet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
+|mtcnn\_rnet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
+|openpose                         |[vision/pose-estimation/openpose](vision/pose-estimation/openpose)                                    |:white\_check\_mark:|:white\_check\_mark:|
+|paddle\_humansegv1\_lite         |[vision/segmentation/paddle\_humansegv1\_lite](vision/segmentation/paddle_humansegv1_lite)            |:white\_check\_mark:|                    |
+|pointpillars                     |[vision/detection/pointpillars](vision/detection/pointpillars/)                                       |                    |:white\_check\_mark:|
+|PP-OCRv3\_det                    |[vision/OCR/OCRv3\_paddle](vision/OCR/OCRv3_paddle)                                                   |                    |:white\_check\_mark:|
+|PP-OCRv3\_rec                    |[vision/OCR/OCRv3\_paddle](vision/OCR/OCRv3_paddle)                                                   |                    |:white\_check\_mark:|
+|PP-OCRv3cls                      |[vision/OCR/PP-OCRv3cls](vision/OCR/PP-OCRv3cls)                                                      |:white\_check\_mark:|                    |
+|PP-OCRv3det                      |[vision/OCR/PP-OCRv3det](vision/OCR/PP-OCRv3det)                                                      |:white\_check\_mark:|:white\_check\_mark:|
+|PP-OCRv3rec                      |[vision/OCR/PP-OCRv3rec](vision/OCR/PP-OCRv3rec)                                                      |                    |:white\_check\_mark:|
+|pp\_humanseg\_lite\_mini         |[vision/segmentation/paddle\_humansegv1\_lite](vision/segmentation/paddle_humansegv1_lite)            |:white\_check\_mark:|                    |
+|pp\_humansegv2\_mobile           |[vision/segmentation/pp-humanseg](vision/segmentation/pp-humanseg)                                    |                    |:white\_check\_mark:|
+|pp\_liteseg                      |[vision/segmentation/pp\_liteseg](vision/segmentation/pp_liteseg)                                     |:white\_check\_mark:|:white\_check\_mark:|
+|pp\_picodet\_s                   |[vision/detection/pp-picodet](vision/detection/pp-picodet)                                            |                    |:white\_check\_mark:|
+|ppocr\_mobile\_v2.0\_cls         |[vision/OCR/OCRv3\_paddle](vision/OCR/OCRv3_paddle)                                                   |                    |:white\_check\_mark:|
+|ppyoloe\_crn\_s\_300e\_coco      |[vision/detection/ppyoloe](vision/detection/ppyoloe)                                                  |                    |:white\_check\_mark:|
+|ppyoloe\_crn\_x\_300e\_coco      |[vision/detection/ppyoloe](vision/detection/ppyoloe)                                                  |:white\_check\_mark:|                    |
+|ppyoloe\_plus\_crn\_x\_80e\_coco |[vision/detection/ppyoloe](vision/detection/ppyoloe)                                                  |:white\_check\_mark:|                    |
+|ppyolov2\_r101vd\_dcn\_365e\_coco|[vision/detection/ppyolo](vision/detection/ppyolo)                                                    |:white\_check\_mark:|                    |
+|py-R-FCN                         |[vision/detection/py-R-FCN](vision/detection/py-R-FCN)                                                |:white\_check\_mark:|                    |
+|res2net101\_26w\_4s              |[vision/classification/res2net101\_26w\_4s](vision/classification/res2net101_26w_4s)                  |                    |:white\_check\_mark:|
+|res2net50\_26w\_4s               |[vision/classification/res2net50\_26w\_4s](vision/classification/res2net50_26w_4s)                    |                    |:white\_check\_mark:|
+|resnet18-v1-7                    |[vision/classification/resnet18-v1-7](vision/classification/resnet18-v1-7)                            |                    |:white\_check\_mark:|
+|resnet18-v2                      |[vision/classification/resnet18-v2](vision/classification/resnet18-v2)                                |                    |:white\_check\_mark:|
+|resnet34                         |[vision/classification/ResNet34](vision/classification/ResNet34)                                      |:white\_check\_mark:|                    |
+|resnet34-v1-7                    |[vision/classification/resnet34-v1-7](vision/classification/resnet34-v1-7)                            |                    |:white\_check\_mark:|
+|resnet50                         |[vision/classification/mm\_resnet50](vision/classification/mm_resnet50)                               |:white\_check\_mark:|                    |
+|resnet50-caffe                   |[vision/classification/ResNet50-Caffe](vision/classification/ResNet50-Caffe)                          |:white\_check\_mark:|                    |
+|resnet50-v1-7                    |[vision/classification/resnet50-v1-7](vision/classification/resnet50-v1-7)                            |                    |:white\_check\_mark:|
+|resnet50-v2                      |[vision/classification/resnet50-v2](vision/classification/resnet50-v2)                                |                    |:white\_check\_mark:|
+|ResNet50\_vd\_infer              |[vision/classification/ResNet50\_vd\_paddle](vision/classification/ResNet50_vd_paddle)                |                    |:white\_check\_mark:|
+|resnext                          |[vision/classification/ResNeXt](vision/classification/ResNeXt)                                        |:white\_check\_mark:|                    |
+|resneXt50                        |[vision/classification/ResNeXt50](vision/classification/ResNeXt50)                                    |:white\_check\_mark:|                    |
+|retinaface                       |[vision/detection/retinaface](vision/detection/retinaface)                                            |:white\_check\_mark:|                    |
+|scrfd                            |[vision/detection/scrfd](vision/detection/scrfd)                                                      |                    |:white\_check\_mark:|
+|shufflenet\_v2                   |[vision/classification/shufflenet\_v2](vision/classification/shufflenet_v2)                           |                    |:white\_check\_mark:|
+|shufflenetv2                     |[vision/classification/shufflenet\_v2\_torch](vision/classification/shufflenet_v2_torch)              |:white\_check\_mark:|                    |
+|SiamMask                         |[vision/tracking/SiamMask-Torch](vision/tracking/SiamMask-Torch)                                      |:white\_check\_mark:|:white\_check\_mark:|
+|squeezenet                       |[vision/classification/SqueezeNet](vision/classification/SqueezeNet)                                  |:white\_check\_mark:|                    |
+|squeezenet1.0                    |[vision/classification/squeezenet1.0](vision/classification/squeezenet1.0)                            |                    |:white\_check\_mark:|
+|SRCNN                            |[vision/super-resolution/SRCNN](vision/super-resolution/SRCNN)                                        |:white\_check\_mark:|                    |
+|ssd-mobilenet-tflite             |[vision/detection/ssd-mobilenet](vision/detection/ssd-mobilenet)                                      |                    |:white\_check\_mark:|
+|swin\_t                          |[vision/classification/SwinTransformer](vision/classification/SwinTransformer)                        |:white\_check\_mark:|:white\_check\_mark:|
+|tpu-mlir\_S-DCNet\_SHA           |[vision/visual-counting/S-DCNet](vision/visual-counting/S-DCNet)                                      |                    |:white\_check\_mark:|
+|tpu-mlir\_S-DCNet\_SHB           |[vision/visual-counting/S-DCNet](vision/visual-counting/S-DCNet)                                      |                    |:white\_check\_mark:|
+|tpu-mlir\_yoloface               |[vision/detection/yoloface](vision/detection/yoloface)                                                |                    |:white\_check\_mark:|
+|tsm                              |[vision/recognition/tsm](vision/recognition/tsm)                                                      |                    |:white\_check\_mark:|
+|ultralytics\_yolov3              |[vision/detection/ultralytics-yolov3](vision/detection/ultralytics-yolov3)                            |:white\_check\_mark:|                    |
+|unet\_plusplus                   |[vision/segmentation/unet\_plusplus](vision/segmentation/unet_plusplus)                               |:white\_check\_mark:|:white\_check\_mark:|
+|VDSR                             |[vision/super-resolution/VDSR](vision/super-resolution/VDSR)                                          |:white\_check\_mark:|                    |
+|vgg11                            |[vision/classification/vgg11-torch](vision/classification/vgg11-torch)                                |:white\_check\_mark:|                    |
+|vgg16                            |[vision/classification/vgg16](vision/classification/vgg16)                                            |                    |:white\_check\_mark:|
+|vgg19                            |[vision/classification/vgg19](vision/classification/vgg19)                                            |:white\_check\_mark:|                    |
+|vggssd\_300                      |[vision/detection/vggssd\_300](vision/detection/vggssd_300)                                           |:white\_check\_mark:|                    |
+|vision\_OCR\_CRNN\_tpu-mlir      |[vision/OCR/CRNN](vision/OCR/CRNN)                                                                    |                    |:white\_check\_mark:|
+|WRN-50-2                         |[vision/classification/WRN-50-2](vision/classification/WRN-50-2)                                      |:white\_check\_mark:|:white\_check\_mark:|
+|wrn50                            |[vision/classification/wrn50](vision/classification/wrn50)                                            |:white\_check\_mark:|:white\_check\_mark:|
+|xception                         |[vision/classification/xception](vision/classification/xception)                                      |:white\_check\_mark:|                    |
+|Yet-Another-EfficientDet-Pytorch |[vision/detection/Yet-Another-EfficientDet-Pytorch](vision/detection/Yet-Another-EfficientDet-Pytorch)|:white\_check\_mark:|                    |
+|yolov3                           |[vision/detection/yolov3-torch](vision/detection/yolov3-torch)                                        |:white\_check\_mark:|                    |
+|yolov3\_320                      |[vision/detection/yolov3\_320](vision/detection/yolov3_320)                                           |:white\_check\_mark:|                    |
+|yolov3\_608                      |[vision/detection/yolov3\_608](vision/detection/yolov3_608)                                           |:white\_check\_mark:|                    |
+|yolov3\_mobilenet\_v3\_270e\_coco|[vision/detection/ppyolov3](vision/detection/ppyolov3)                                                |                    |:white\_check\_mark:|
+|yolov3\_spp                      |[vision/detection/yolov3\_spp](vision/detection/yolov3_spp)                                           |:white\_check\_mark:|                    |
+|yolov3\_tiny                     |[vision/detection/yolov3\_tiny](vision/detection/yolov3_tiny)                                         |:white\_check\_mark:|                    |
+|yolov5l                          |[vision/detection/yolov5](vision/detection/yolov5)                                                    |                    |:white\_check\_mark:|
+|yolov5l-5                        |[vision/detection/yolov5](vision/detection/yolov5)                                                    |:white\_check\_mark:|                    |
+|yolov5m                          |[vision/detection/yolov5](vision/detection/yolov5)                                                    |                    |:white\_check\_mark:|
+|yolov5m-5                        |[vision/detection/yolov5](vision/detection/yolov5)                                                    |:white\_check\_mark:|                    |
+|yolov5m-6                        |[vision/detection/yolov5](vision/detection/yolov5)                                                    |:white\_check\_mark:|                    |
+|yolov5s                          |[vision/detection/yolov5](vision/detection/yolov5)                                                    |                    |:white\_check\_mark:|
+|yolov5s-4                        |[vision/detection/yolov5](vision/detection/yolov5)                                                    |:white\_check\_mark:|                    |
+|yolov5s-5                        |[vision/detection/yolov5](vision/detection/yolov5)                                                    |:white\_check\_mark:|                    |
+|yolov5s-tflite                   |[vision/detection/yolov5](vision/detection/yolov5)                                                    |                    |:white\_check\_mark:|
+|yolov5x                          |[vision/detection/yolov5](vision/detection/yolov5)                                                    |                    |:white\_check\_mark:|
+|yolov5x-5                        |[vision/detection/yolov5](vision/detection/yolov5)                                                    |:white\_check\_mark:|                    |
+|yolox\_s\_300e\_coco             |[vision/detection/ppyolox](vision/detection/ppyolox)                                                  |                    |:white\_check\_mark:|
+
+### Language
+
+|Model                     |Path                                                                |NNTC                |MLIR                |
+|:-                        |:-                                                                  |:-                  |:-                  |
+|bert                      |[language/nlp/bert](language/nlp/bert)                              |:white\_check\_mark:|                    |
+|bert\_paddle              |[language/nlp/bert\_paddle](language/nlp/bert_paddle)               |:white\_check\_mark:|                    |
+|ConformerEncoder          |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
+|GRU                       |[language/nlp/GRU](language/nlp/GRU)                                |:white\_check\_mark:|                    |
+|language\_nlp\_GRU\_mlir  |[language/nlp/GRU](language/nlp/GRU)                                |                    |:white\_check\_mark:|
+|mobilebert-tflite         |[language/nlp/mobilebert\_tflite](language/nlp/mobilebert_tflite)   |                    |:white\_check\_mark:|
+|ScoringIds                |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
+|TransformerDecoder        |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
+|TransformerLM             |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
+|WenetDecoder              |[language/asr/wenet](language/asr/wenet)                            |:white\_check\_mark:|                    |
+|WenetEncoder              |[language/asr/wenet](language/asr/wenet)                            |:white\_check\_mark:|                    |

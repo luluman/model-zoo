@@ -10,6 +10,8 @@ named s/m/l/x, which are configured through width multiplier and depth multiplie
 PP-YOLOE avoids using special operators, such as Deformable Convolution or
 Matrix NMS, to be deployed friendly on various hardware.
 
+It is recommended to use fastdeploy.
+
 ## Model
 
 | Model                       | Download                                 | Shape(hw) |
