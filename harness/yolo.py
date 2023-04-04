@@ -315,7 +315,7 @@ def inference(net, input_path, loops, tpu_id):
   cap.release()
   return prediction
 
-def process(bmodel, devices, imagedir, anno):
+def process(bmodel, devices, imagedir, anno, outdir):
   with open(anno) as g:
     js = json.load(g)
   preds = []
@@ -366,16 +366,16 @@ def process(bmodel, devices, imagedir, anno):
 
   print("inference finished")
 
-  with open('output/yolo.json','w') as f:
+  with open(outdir + '/yolo.json','w') as f:
       json.dump(preds, f, indent=4)
   return tested_file
 
-def calculate_map(anno, file_list):
+def calculate_map(anno, file_list, outdir):
   print("start MAP calculate...")
   #map test
   coco = COCO(anno)
   results = COCOResults('bbox')
-  coco_dt = coco.loadRes('output/yolo.json')
+  coco_dt = coco.loadRes(outdir+'/yolo.json')
   coco_eval = COCOeval(coco, coco_dt, 'bbox')
   coco_eval.params.imgIds = [int(Path(x).stem) for x in file_list if x.endswith('jpg')]
   coco_eval.evaluate()
@@ -391,8 +391,9 @@ def harness_yolo(tree, config, args):
   imagedir = tree.expand_variables(config, dataset_info['imagedir'])
   anno = tree.expand_variables(config, dataset_info['anno'])
   devices = tree.global_config['devices']
-  tested_file = process(bmodel, devices, imagedir, anno)
-  result = calculate_map(anno, tested_file)
+  outdir = tree.global_config['outdir']
+  tested_file = process(bmodel, devices, imagedir, anno, outdir)
+  result = calculate_map(anno, tested_file, outdir)
   output = result.results['bbox']
   return {k: f'{v:.2%}' for k, v in output.items()}
 
@@ -409,9 +410,10 @@ def main():
   parser.add_argument('--devices', '-d',
     type=int, nargs='*', help='Devices',
     default=[0])
+  parser.add_argument('--outdir', type=str,default='output', help='yolo json outdir')
   args = parser.parse_args()
-  tested_file = process(args.bmodel, args.devices, args.imagedir, args.anno)
-  result = calculate_map(args.anno, tested_file)
+  tested_file = process(args.bmodel, args.devices, args.imagedir, args.anno, args.outdir)
+  result = calculate_map(args.anno, tested_file, args.outdir)
   print(result)
 
 if __name__ == '__main__':
