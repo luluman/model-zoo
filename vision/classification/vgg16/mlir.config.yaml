@@ -27,44 +27,62 @@ mlir_calibration:
     --input_num 100
     -o $(workdir)/$(name).calitable
 
-deploy:
-  - model_deploy.py  --mlir $(workdir)/transformed.mlir
-      --quantize F32
-      --chip $(target)
-      --test_input $(workdir)/$(name)_in_f32.npz
-      --test_reference $(name)_top_outputs.npz
-      --tolerance 0.99,0.99
-      --model $(workdir)/$(name)_$(target)_f32.bmodel
-  - model_deploy.py --mlir $(workdir)/transformed.mlir
-      --quantize INT8
-      --calibration_table $(workdir)/$(name).calitable
-      --quant_input
-      --quant_output
-      --chip $(target)
-      --test_input $(workdir)/$(name)_in_f32.npz
-      --test_reference $(name)_top_outputs.npz
-      --tolerance 0.98,0.79
-      --model $(workdir)/$(name)_$(target)_int8_sym.bmodel
+BM1684:
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/transformed.mlir
+        --quantize F32
+        --chip $(target)
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.99,0.99
+        --model $(workdir)/$(name)_$(target)_f32.bmodel
+    - model_deploy.py --mlir $(workdir)/transformed.mlir
+        --quantize INT8
+        --calibration_table $(workdir)/$(name).calitable
+        --quant_input
+        --quant_output
+        --chip $(target)
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.98,0.79
+        --model $(workdir)/$(name)_$(target)_int8_sym.bmodel
 
-dataset:
-  image_path: $(imagenet2012_val_set)
-  image_label: $(imagenet2012_caffe_val_ground_truth)
-  mean: [123.675, 116.28, 103.53]
-  scale: [0.0171, 0.0175, 0.0174]
-  size: 224
-  trans: true
-  bgr2rgb: true
+  dataset:
+    image_path: $(imagenet2012_val_set)
+    image_label: $(imagenet2012_caffe_val_ground_truth)
+    mean: [123.675, 116.28, 103.53]
+    scale: [0.0171, 0.0175, 0.0174]
+    size: 224
+    trans: true
+    bgr2rgb: true
 
-harness:
-  type: efficientnetv2
-  args:
-    - name: FP32
-      bmodel: $(workdir)/$(name)_$(target)_f32.bmodel
-    - name: INT8
-      bmodel: $(workdir)/$(name)_$(target)_int8_sym.bmodel
+  harness:
+    type: efficientnetv2
+    args:
+      - name: FP32
+        bmodel: $(workdir)/$(name)_$(target)_f32.bmodel
+      - name: INT8
+        bmodel: $(workdir)/$(name)_$(target)_int8_sym.bmodel
 
 BM1684X:
   deploy:
+    - model_deploy.py  --mlir $(workdir)/transformed.mlir
+        --quantize F32
+        --chip $(target)
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.99,0.99
+        --model $(workdir)/$(name)_$(target)_f32.bmodel
+    - model_deploy.py --mlir $(workdir)/transformed.mlir
+        --quantize INT8
+        --calibration_table $(workdir)/$(name).calitable
+        --quant_input
+        --quant_output
+        --chip $(target)
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.98,0.79
+        --model $(workdir)/$(name)_$(target)_int8_sym.bmodel
     - model_deploy.py --mlir $(workdir)/transformed.mlir
         --quantize INT8
         --asymmetric
@@ -87,5 +105,9 @@ BM1684X:
   harness:
     type: efficientnetv2
     args:
+      - name: FP32
+        bmodel: $(workdir)/$(name)_$(target)_f32.bmodel
+      - name: INT8
+        bmodel: $(workdir)/$(name)_$(target)_int8_sym.bmodel
       - name: INT8
         bmodel: $(workdir)/$(name)_$(target)_int8_asym.bmodel
