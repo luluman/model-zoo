@@ -63,51 +63,15 @@ jobs:
         if: ${{ cancelled() || failure() }}
         run: .github/workflows/cleanup.sh
 
-  test_runtime_BM1684X:
+  test_runtime:
     if: github.repository == 'sophgo/model-zoo'
-    name: BM1684X MLIR Runtime
-    runs-on: [runtime, BM1684X]
-    needs: test_build
-
-    steps:
-      ##########################
-      # Checkout the code base #
-      ##########################
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          clean: false
-          lfs: false
-
-      - name: LFS Pull
-        run: |
-          git lfs pull --exclude '' --include 'dataset/ILSVRC2012/*'
-
-      - name: Set Optional Env
-        if: "${{ github.event_name == 'schedule' || \
-                 contains( \
-                   github.event.pull_request.labels.*.name, \
-                   'full_regression' \
-                 ) }}"
-        run: |
-          echo "FULL_TEST=true" >> $GITHUB_ENV
-
-      - name: Test
-        run: |
-          .github/workflows/test.sh -m 'runtime and mlir' -t BM1684X \
-              ${{ inputs.cases }}
-        env:
-          MLIR_MODEL_TAR: ${{ needs.test_build.outputs.MLIR_MODEL_TAR }}
-
-      - name: Cleanup
-        if: ${{ cancelled() || failure() }}
-        run: .github/workflows/cleanup.sh
-
-  test_runtime_BM1684:
-    if: github.repository == 'sophgo/model-zoo'
-    name: BM1684 MLIR Runtime
-    runs-on: [runtime, BM1684]
+    name: ${{ matrix.target }} ${{ matrix.host-arch }} MLIR Runtime
+    strategy:
+      matrix:
+        target: [BM1684, BM1684X]
+        host-arch: [X64, ARM64]
+    runs-on: [runtime, '${{ matrix.host-arch }}', '${{ matrix.target }}']
+    timeout-minutes: 10080
     needs: test_build
 
     steps:
@@ -132,8 +96,8 @@ jobs:
 
       - name: Test
         run: |
-          .github/workflows/test.sh -m 'runtime and mlir' -t BM1684 \
-              ${{ inputs.cases }}
+          .github/workflows/test.sh -m 'runtime and mlir' -t \
+              ${{ matrix.target }} ${{ inputs.cases }}
         env:
           MLIR_MODEL_TAR: ${{ needs.test_build.outputs.MLIR_MODEL_TAR }}
 

@@ -1,7 +1,7 @@
 ---
 
 name: mtcnn_onet
-gops: 0.02
+gops: 0.0262
 
 model: $(home)/det3.prototxt
 weight: $(home)/det3.caffemodel
