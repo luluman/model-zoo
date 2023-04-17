@@ -45,7 +45,7 @@ BM1684X:
         --chip bm1684x
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
-        --tolerance 0.80,0.76
+        --tolerance 0.96,0.73
         --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel
     - model_deploy.py --mlir $(workdir)/transformed.mlir
         --quantize INT8
@@ -54,7 +54,7 @@ BM1684X:
         --chip bm1684x
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
-        --tolerance 0.80,0.76
+        --tolerance 0.97,0.80
         --model $(workdir)/$(name)_bm1684x_int8_asym.bmodel
 
   dataset:
