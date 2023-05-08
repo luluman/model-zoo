@@ -62,12 +62,13 @@ BM1684X:
     image_label: $(imagenet2012_caffe_val_ground_truth)
     mean: [123.67, 116.2, 103.53]
     scale: [0.017, 0.017, 0.017]
+    resize_dims: 256
     size: 224
     trans: True
     bgr2rgb: True
 
   harness:
-    type: efficientnetv2
+    type: topk
     args:
       - name: FP32
         bmodel: $(workdir)/$(name)_bm1684x_f32.bmodel

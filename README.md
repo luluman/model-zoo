@@ -51,8 +51,11 @@ python3 .github/workflows/check.py
 |:-                               |:-                                                                                                    |:-                  |:-                  |
 |alexnet                          |[vision/classification/AlexNet-Caffe](vision/classification/AlexNet-Caffe)                            |:white\_check\_mark:|                    |
 |arcface                          |[vision/recognition/arcface](vision/recognition/arcface)                                              |                    |:white\_check\_mark:|
-|c3d                              |[vision/video-recognition/C3D](vision/video-recognition/C3D)                                          |:white\_check\_mark:|                    |
+|big\_transfer                    |[vision/classification/big\_transfer\_mlir](vision/classification/big_transfer_mlir)                  |                    |:white\_check\_mark:|
+|BiSeNet                          |[vision/segmentation/BiSeNet](vision/segmentation/BiSeNet)                                            |                    |:white\_check\_mark:|
+|c3d                              |[vision/video-recognition/C3D](vision/video-recognition/C3D)                                          |:white\_check\_mark:|:white\_check\_mark:|
 |CenterNet                        |[vision/detection/CenterNet-Torch](vision/detection/CenterNet-Torch)                                  |:white\_check\_mark:|                    |
+|clip                             |[vision/classification/clip-mlir](vision/classification/clip-mlir)                                    |                    |:white\_check\_mark:|
 |CRNN                             |[vision/OCR/CRNN](vision/OCR/CRNN)                                                                    |:white\_check\_mark:|                    |
 |cyclegan\_horse2zebra            |[vision/GAN/cyclegan](vision/GAN/cyclegan)                                                            |:white\_check\_mark:|                    |
 |DBNet\_totaltext\_res18\_dcn     |[vision/OCR/DBNet](vision/OCR/DBNet)                                                                  |:white\_check\_mark:|                    |
@@ -73,6 +76,7 @@ python3 .github/workflows/check.py
 |facenet                          |[vision/recognition/facenet](vision/recognition/facenet)                                              |:white\_check\_mark:|                    |
 |GOTURN                           |[vision/tracking/GOTURN-Caffe](vision/tracking/GOTURN-Caffe)                                          |:white\_check\_mark:|                    |
 |HRNet                            |[vision/classification/HRNet-Torch](vision/classification/HRNet-Torch)                                |:white\_check\_mark:|                    |
+|huggingface-resnet50             |[vision/classification/resnet50-v1.5](vision/classification/resnet50-v1.5)                            |:white\_check\_mark:|                    |
 |inception\_resnet\_v2            |[vision/classification/inception\_resnet\_v2](vision/classification/inception_resnet_v2)              |:white\_check\_mark:|                    |
 |inception\_v1                    |[vision/classification/inception\_v1](vision/classification/inception_v1)                             |:white\_check\_mark:|                    |
 |inception\_v3                    |[vision/classification/inception\_v3](vision/classification/inception_v3)                             |:white\_check\_mark:|                    |
@@ -82,11 +86,11 @@ python3 .github/workflows/check.py
 |lenet                            |[vision/classification/LeNet](vision/classification/LeNet)                                            |:white\_check\_mark:|                    |
 |lprnet                           |[vision/detection/lprnet](vision/detection/lprnet)                                                    |                    |:white\_check\_mark:|
 |market\_bot\_R50                 |[vision/reid/market\_bot\_R50](vision/reid/market_bot_R50)                                            |:white\_check\_mark:|:white\_check\_mark:|
-|MDNet                            |[vision/tracking/MDNet-Torch](vision/tracking/MDNet-Torch)                                            |:white\_check\_mark:|                    |
+|MDNet                            |[vision/tracking/MDNet-Torch](vision/tracking/MDNet-Torch)                                            |:white\_check\_mark:|:white\_check\_mark:|
 |mm\_resnet50                     |[vision/classification/mm\_resnet50](vision/classification/mm_resnet50)                               |                    |:white\_check\_mark:|
 |mobilenet-v2                     |[vision/classification/mobilenet-v2](vision/classification/mobilenet-v2)                              |                    |:white\_check\_mark:|
 |mobilenet\_v1                    |[vision/classification/MobileNet-Caffe-v1](vision/classification/MobileNet-Caffe-v1)                  |:white\_check\_mark:|                    |
-|mobilenetv2                      |[vision/classification/MobileNet-Caffe-v2](vision/classification/MobileNet-Caffe-v2)                  |:white\_check\_mark:|                    |
+|mobilenetv2                      |[vision/classification/MobileNet-Caffe-v2](vision/classification/MobileNet-Caffe-v2)                  |:white\_check\_mark:|:white\_check\_mark:|
 |mobilenetv3                      |[vision/classification/MobileNet-Caffe-v3](vision/classification/MobileNet-Caffe-v3)                  |:white\_check\_mark:|                    |
 |mobileseg                        |[vision/segmentation/mobileseg](vision/segmentation/mobileseg)                                        |:white\_check\_mark:|                    |
 |mobileseg-mlir                   |[vision/segmentation/mobileseg](vision/segmentation/mobileseg)                                        |                    |:white\_check\_mark:|
@@ -111,21 +115,24 @@ python3 .github/workflows/check.py
 |ppyoloe\_plus\_crn\_x\_80e\_coco |[vision/detection/ppyoloe](vision/detection/ppyoloe)                                                  |:white\_check\_mark:|                    |
 |ppyolov2\_r101vd\_dcn\_365e\_coco|[vision/detection/ppyolo](vision/detection/ppyolo)                                                    |:white\_check\_mark:|                    |
 |py-R-FCN                         |[vision/detection/py-R-FCN](vision/detection/py-R-FCN)                                                |:white\_check\_mark:|                    |
-|res2net101\_26w\_4s              |[vision/classification/res2net101\_26w\_4s](vision/classification/res2net101_26w_4s)                  |                    |:white\_check\_mark:|
-|res2net50\_26w\_4s               |[vision/classification/res2net50\_26w\_4s](vision/classification/res2net50_26w_4s)                    |                    |:white\_check\_mark:|
-|resnet18-v1-7                    |[vision/classification/resnet18-v1-7](vision/classification/resnet18-v1-7)                            |                    |:white\_check\_mark:|
+|res2net101\_26w\_4s              |[vision/classification/res2net101\_26w\_4s](vision/classification/res2net101_26w_4s)                  |:white\_check\_mark:|:white\_check\_mark:|
+|res2net50\_26w\_4s               |[vision/classification/res2net50\_26w\_4s](vision/classification/res2net50_26w_4s)                    |:white\_check\_mark:|:white\_check\_mark:|
+|resnet101-v1-7                   |[vision/classification/resnet101-v1-7](vision/classification/resnet101-v1-7)                          |                    |:white\_check\_mark:|
+|resnet152-v1-7                   |[vision/classification/resnet152-v1-7](vision/classification/resnet152-v1-7)                          |                    |:white\_check\_mark:|
+|resnet18-v1-7                    |[vision/classification/resnet18-v1-7](vision/classification/resnet18-v1-7)                            |:white\_check\_mark:|:white\_check\_mark:|
 |resnet18-v2                      |[vision/classification/resnet18-v2](vision/classification/resnet18-v2)                                |                    |:white\_check\_mark:|
 |resnet34                         |[vision/classification/ResNet34](vision/classification/ResNet34)                                      |:white\_check\_mark:|                    |
-|resnet34-v1-7                    |[vision/classification/resnet34-v1-7](vision/classification/resnet34-v1-7)                            |                    |:white\_check\_mark:|
+|resnet34-v1-7                    |[vision/classification/resnet34-v1-7](vision/classification/resnet34-v1-7)                            |:white\_check\_mark:|:white\_check\_mark:|
 |resnet50                         |[vision/classification/mm\_resnet50](vision/classification/mm_resnet50)                               |:white\_check\_mark:|                    |
 |resnet50-caffe                   |[vision/classification/ResNet50-Caffe](vision/classification/ResNet50-Caffe)                          |:white\_check\_mark:|                    |
-|resnet50-v1-7                    |[vision/classification/resnet50-v1-7](vision/classification/resnet50-v1-7)                            |                    |:white\_check\_mark:|
+|resnet50-v1-7                    |[vision/classification/resnet50-v1-7](vision/classification/resnet50-v1-7)                            |:white\_check\_mark:|:white\_check\_mark:|
 |resnet50-v2                      |[vision/classification/resnet50-v2](vision/classification/resnet50-v2)                                |                    |:white\_check\_mark:|
 |ResNet50\_vd\_infer              |[vision/classification/ResNet50\_vd\_paddle](vision/classification/ResNet50_vd_paddle)                |                    |:white\_check\_mark:|
 |resnext                          |[vision/classification/ResNeXt](vision/classification/ResNeXt)                                        |:white\_check\_mark:|                    |
 |resneXt50                        |[vision/classification/ResNeXt50](vision/classification/ResNeXt50)                                    |:white\_check\_mark:|                    |
 |retinaface                       |[vision/detection/retinaface](vision/detection/retinaface)                                            |:white\_check\_mark:|                    |
 |scrfd                            |[vision/detection/scrfd](vision/detection/scrfd)                                                      |                    |:white\_check\_mark:|
+|SegFormer                        |[vision/segmentation/SegFormer](vision/segmentation/SegFormer)                                        |                    |:white\_check\_mark:|
 |shufflenet\_v2                   |[vision/classification/shufflenet\_v2](vision/classification/shufflenet_v2)                           |                    |:white\_check\_mark:|
 |shufflenetv2                     |[vision/classification/shufflenet\_v2\_torch](vision/classification/shufflenet_v2_torch)              |:white\_check\_mark:|                    |
 |SiamMask                         |[vision/tracking/SiamMask-Torch](vision/tracking/SiamMask-Torch)                                      |:white\_check\_mark:|:white\_check\_mark:|
@@ -138,6 +145,7 @@ python3 .github/workflows/check.py
 |tpu-mlir\_S-DCNet\_SHB           |[vision/visual-counting/S-DCNet](vision/visual-counting/S-DCNet)                                      |                    |:white\_check\_mark:|
 |tpu-mlir\_yoloface               |[vision/detection/yoloface](vision/detection/yoloface)                                                |                    |:white\_check\_mark:|
 |tsm                              |[vision/recognition/tsm](vision/recognition/tsm)                                                      |                    |:white\_check\_mark:|
+|TSN                              |[vision/video-recognition/TSN](vision/video-recognition/TSN/)                                         |                    |:white\_check\_mark:|
 |ultralytics\_yolov3              |[vision/detection/ultralytics-yolov3](vision/detection/ultralytics-yolov3)                            |:white\_check\_mark:|                    |
 |unet\_plusplus                   |[vision/segmentation/unet\_plusplus](vision/segmentation/unet_plusplus)                               |:white\_check\_mark:|:white\_check\_mark:|
 |VDSR                             |[vision/super-resolution/VDSR](vision/super-resolution/VDSR)                                          |:white\_check\_mark:|                    |
@@ -146,6 +154,8 @@ python3 .github/workflows/check.py
 |vgg19                            |[vision/classification/vgg19](vision/classification/vgg19)                                            |:white\_check\_mark:|                    |
 |vggssd\_300                      |[vision/detection/vggssd\_300](vision/detection/vggssd_300)                                           |:white\_check\_mark:|                    |
 |vision\_OCR\_CRNN\_tpu-mlir      |[vision/OCR/CRNN](vision/OCR/CRNN)                                                                    |                    |:white\_check\_mark:|
+|vit-base-patch16-384             |[vision/classification/vit_B_16](vision/classification/vit_B_16)                                      |:white\_check\_mark:|                    |
+|vit-large-patch16-384            |[vision/classification/vit_L_16](vision/classification/vit_L_16)                                      |:white\_check\_mark:|                    |
 |WRN-50-2                         |[vision/classification/WRN-50-2](vision/classification/WRN-50-2)                                      |:white\_check\_mark:|:white\_check\_mark:|
 |wrn50                            |[vision/classification/wrn50](vision/classification/wrn50)                                            |:white\_check\_mark:|:white\_check\_mark:|
 |xception                         |[vision/classification/xception](vision/classification/xception)                                      |:white\_check\_mark:|                    |
@@ -171,16 +181,23 @@ python3 .github/workflows/check.py
 
 ### Language
 
-|Model                     |Path                                                                |NNTC                |MLIR                |
-|:-                        |:-                                                                  |:-                  |:-                  |
-|bert                      |[language/nlp/bert](language/nlp/bert)                              |:white\_check\_mark:|                    |
-|bert\_paddle              |[language/nlp/bert\_paddle](language/nlp/bert_paddle)               |:white\_check\_mark:|                    |
-|ConformerEncoder          |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
-|GRU                       |[language/nlp/GRU](language/nlp/GRU)                                |:white\_check\_mark:|                    |
-|language\_nlp\_GRU\_mlir  |[language/nlp/GRU](language/nlp/GRU)                                |                    |:white\_check\_mark:|
-|mobilebert-tflite         |[language/nlp/mobilebert\_tflite](language/nlp/mobilebert_tflite)   |                    |:white\_check\_mark:|
-|ScoringIds                |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
-|TransformerDecoder        |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
-|TransformerLM             |[language/asr/conformer](language/asr/conformer)                    |:white\_check\_mark:|                    |
-|WenetDecoder              |[language/asr/wenet](language/asr/wenet)                            |:white\_check\_mark:|                    |
-|WenetEncoder              |[language/asr/wenet](language/asr/wenet)                            |:white\_check\_mark:|                    |
+|Model                           |Path                                                                          |NNTC                |MLIR                |
+|:-                              |:-                                                                            |:-                  |:-                  |
+|bert                            |[language/nlp/bert](language/nlp/bert)                                        |:white\_check\_mark:|                    |
+|bert\_base\_transformers-2.11.0 |[language/nlp/Huggingface_bert_squadv1](language/nlp/Huggingface_bert_squadv1)|:white\_check\_mark:|                    |
+|bert\_base\_transformers-4.23.0 |[language/nlp/Huggingface_bert_squadv1](language/nlp/Huggingface_bert_squadv1)|:white\_check\_mark:|                    |
+|bert\_large\_transformers-2.11.0|[language/nlp/Huggingface_bert_squadv1](language/nlp/Huggingface_bert_squadv1)|:white\_check\_mark:|                    |
+|bert\_large\_transformers-4.23.0|[language/nlp/Huggingface_bert_squadv1](language/nlp/Huggingface_bert_squadv1)|:white\_check\_mark:|                    |
+|bert\_paddle                    |[language/nlp/bert\_paddle](language/nlp/bert_paddle)                         |:white\_check\_mark:|                    |
+|ConformerEncoder                |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
+|gpt2                            |[language/generate/gpt2](language/generate/gpt2)                              |:white\_check\_mark:|                    |
+|GRU                             |[language/nlp/GRU](language/nlp/GRU)                                          |:white\_check\_mark:|:white\_check\_mark:|
+|mobilebert-tflite               |[language/nlp/mobilebert\_tflite](language/nlp/mobilebert_tflite)             |                    |:white\_check\_mark:|
+|opus-mt-zh-en-decoder           |[language/translate/opus-mt-zh-en](language/translate/opus-mt-zh-en)          |:white\_check\_mark:|                    |
+|opus-mt-zh-en-encoder           |[language/translate/opus-mt-zh-en](language/translate/opus-mt-zh-en)          |:white\_check\_mark:|                    |
+|opus-mt-zh-en-init-decoder      |[language/translate/opus-mt-zh-en](language/translate/opus-mt-zh-en)          |:white\_check\_mark:|                    |
+|ScoringIds                      |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
+|TransformerDecoder              |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
+|TransformerLM                   |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
+|WenetDecoder                    |[language/asr/wenet](language/asr/wenet)                                      |:white\_check\_mark:|                    |
+|WenetEncoder                    |[language/asr/wenet](language/asr/wenet)                                      |:white\_check\_mark:|                    |

@@ -14,6 +14,9 @@
     },
     {
       "pattern": "http://alov300pp.joomlafree.it/"
+    },
+    {
+      "pattern": "https://download.openmmlab.com/"
     }
   ],
   "timeout": "20s",

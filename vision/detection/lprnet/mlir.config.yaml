@@ -1,7 +1,7 @@
 ---
 
 name: lprnet
-gops: [30.960206824]
+gops: [0.295]
 shapes:
   - [1, 3, 24, 94]
 

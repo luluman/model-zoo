@@ -1,0 +1,29 @@
+---
+
+name: gpt2
+gops: 97.3
+
+model: $(home)/gpt2.onnx
+
+time: true
+runtime_cmp: false
+
+BM1684X:
+  fp_loops:
+    - build_env: [ ]
+      fp_outdir_template: "1b.fp32.compilation"
+      prec: FP32
+    - build_env:
+        - BMCOMPILER_LAYER_DTYPE_MODE=auto
+      fp_outdir_template: "1b.bf16.compilation"
+      prec: BF16
+  fp_compile_options:
+    python3 -m bmneto
+    --model $(model)
+    --shapes [[1,512],[512],[1]]
+    --target $(target)
+    --enable_profile True
+    --opt 1
+    --dyn False
+    --cmp 0
+    --descs "[0,int64,0,50257],[1,int64,0,512],[2,int64,1,512]"

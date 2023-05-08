@@ -2,6 +2,7 @@ import logging
 import pytest
 import subprocess
 import utils
+import platform
 
 @pytest.mark.runtime
 @pytest.mark.nntc
@@ -15,6 +16,7 @@ def test_nntc_runtime_BM1684X(target, nntc_runtime):
     logging.info(cmd)
     subprocess.run(cmd, shell=True, check=True)
 
+@pytest.mark.skipif(platform.machine() == 'aarch64', reason='Aarch64 machines do not test model precision!')
 @pytest.mark.runtime
 @pytest.mark.nntc
 def test_nntc_precision_BM1684(target, nntc_runtime, get_imagenet_val, get_cifar100, get_coco2017_val):

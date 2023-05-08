@@ -14,38 +14,40 @@ mlir_transform:
     --test_input $(root)/dataset/samples/stock_market.jpg
     --input_shapes [$(shape_param)]
     --test_result $(name)_top_outputs.npz
-    --mlir $(workdir)/transformed.mlir
+    --mlir $(workdir)/$(name).mlir
+
+deploy:
+  - model_deploy.py  --mlir $(workdir)/$(name).mlir
+    --quantize F32
+    --chip $(target)
+    --test_input $(workdir)/$(name)_in_f32.npz
+    --test_reference $(name)_top_outputs.npz
+    --tolerance 0.99,0.99
+    --model $(workdir)/$(name)_$(target)_f32.bmodel
+  - model_deploy.py  --mlir $(workdir)/$(name).mlir
+    --quantize INT8
+    --calibration_table $(home)/det1_cali_table
+    --quant_input
+    --quant_output
+    --chip $(target)
+    --test_input $(workdir)/$(name)_in_f32.npz
+    --test_reference $(name)_top_outputs.npz
+    --tolerance 0.88,0.26
+    --model $(workdir)/$(name)_$(target)_int8_sym.bmodel
 
 BM1684X:
-  deploy:
-    - model_deploy.py  --mlir $(workdir)/transformed.mlir
-        --quantize F32
-        --chip bm1684x
-        --test_input $(workdir)/$(name)_in_f32.npz
-        --test_reference $(name)_top_outputs.npz
-        --tolerance 0.99,0.99
-        --model $(workdir)/$(name)_bm1684x_f32.bmodel
-    - model_deploy.py --mlir $(workdir)/transformed.mlir
+  +deploy:
+    - model_deploy.py --mlir $(workdir)/$(name).mlir
         --quantize F16
-        --chip bm1684x
+        --chip $(target)
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.95,0.85
-        --model $(workdir)/$(name)_bm1684x_f16.bmodel
-    - model_deploy.py --mlir $(workdir)/transformed.mlir
+        --model $(workdir)/$(name)_$(target)_f16.bmodel
+    - model_deploy.py --mlir $(workdir)/$(name).mlir
         --quantize BF16
-        --chip bm1684x
+        --chip $(target)
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.95,0.85
-        --model $(workdir)/$(name)_bm1684x_bf16.bmodel
-    - model_deploy.py --mlir $(workdir)/transformed.mlir
-        --quantize INT8
-        --calibration_table $(home)/det1_cali_table
-        --quant_input
-        --quant_output
-        --chip bm1684x
-        --test_input $(workdir)/$(name)_in_f32.npz
-        --test_reference $(name)_top_outputs.npz
-        --tolerance 0.88,0.26
-        --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel
+        --model $(workdir)/$(name)_$(target)_bf16.bmodel

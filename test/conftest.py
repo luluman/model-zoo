@@ -504,6 +504,10 @@ def runtime_dependencies(latest_tpu_perf_whl):
 
 @pytest.fixture(scope='session')
 def mlir_runtime(runtime_dependencies, target, case_list):
+    dirs_to_remove = ['*.tar', '*out*', 'data']
+    for d in dirs_to_remove:
+        remove_tree(d)
+
     model_tar = read_github_output('MLIR_MODEL_TAR')
     assert model_tar, 'Model tar is empty'
     download_bmodel(target, model_tar)
@@ -513,13 +517,16 @@ def mlir_runtime(runtime_dependencies, target, case_list):
 
     check_output_csv()
 
-    # Docker cleanup
-    dirs_to_remove = ['*.tar', '*out*', 'data']
+    # Cleanup
     for d in dirs_to_remove:
         remove_tree(d)
 
 @pytest.fixture(scope='session')
 def nntc_runtime(runtime_dependencies, target, case_list):
+    dirs_to_remove = ['*.tar', '*out*', 'data']
+    for d in dirs_to_remove:
+        remove_tree(d)
+
     model_tar = read_github_output('NNTC_MODEL_TAR')
     assert model_tar, 'Model tar is empty'
     download_bmodel(target, model_tar)
@@ -529,8 +536,7 @@ def nntc_runtime(runtime_dependencies, target, case_list):
 
     check_output_csv()
 
-    # Docker cleanup
-    dirs_to_remove = ['*.tar', '*out*', 'data']
+    # Cleanup
     for d in dirs_to_remove:
         remove_tree(d)
 

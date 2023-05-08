@@ -1,0 +1,23 @@
+# genetated time: 2023-03-17 10:50:25.492496
+# sample number: 10
+# chip: bm1684  mix_mode: F32
+# number of F32 layer: 17
+###
+# op_name   quantize_mode
+conv2_2/dwise/bn F32
+conv2_2/linear/bn F32
+conv4_2/linear/bn F32
+block_4_2 F32
+conv4_4/linear/bn F32
+block_4_4 F32
+conv4_5/linear/bn F32
+block_4_5 F32
+conv4_7/linear/bn F32
+conv5_1/expand/bn F32
+block_5_1 F32
+conv5_1/dwise/bn F32
+conv5_1/linear/bn F32
+conv5_2/expand/bn F32
+conv5_2/dwise/bn F32
+conv5_2/linear/bn F32
+block_5_2 F32

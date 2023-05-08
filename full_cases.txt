@@ -28,6 +28,8 @@ vision/classification/resnet34-v1-7
 vision/classification/resnet50-v1-7
 vision/classification/res2net50_26w_4s
 vision/classification/res2net101_26w_4s
+vision/classification/resnet101-v1-7
+vision/classification/resnet152-v1-7
 vision/classification/WRN-50-2
 vision/super-resolution/SRCNN
 vision/super-resolution/VDSR
@@ -100,3 +102,13 @@ vision/visual-counting/S-DCNet
 vision/classification/SwinTransformer
 vision/detection/lprnet
 vision/recognition/tsm
+language/nlp/Huggingface_bert_squadv1
+vision/classification/resnet50-v1.5
+vision/classification/big_transfer_mlir
+vision/classification/vit_B_16
+vision/classification/vit_L_16
+vision/classification/clip-mlir
+vision/video-recognition/TSN
+vision/segmentation/BiSeNet
+vision/segmentation/SegFormer
+language/generate/gpt2

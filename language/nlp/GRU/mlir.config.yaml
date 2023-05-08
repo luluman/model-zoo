@@ -1,7 +1,7 @@
 ---
 
-name: language_nlp_GRU_mlir
-gops: [65.921]
+name: GRU
+gops: [0.277]
 shapes:
   - [1, 256]
 

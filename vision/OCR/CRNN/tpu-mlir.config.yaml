@@ -28,36 +28,55 @@ mlir_transform:
 #     --excepts
 #     -o $(home)/cali_table
 
+deploy:
+  - model_deploy.py  --mlir $(workdir)/transformed.mlir
+      --quantize F32
+      --chip $(target)
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.99,0.99
+      --model $(workdir)/$(name)_$(target)_f32.bmodel
+  - model_deploy.py --mlir $(workdir)/transformed.mlir
+      --quantize INT8
+      --calibration_table $(home)/cali_table
+      --quant_input
+      --quant_output
+      --chip $(target)
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.95,0.72
+      --model $(workdir)/$(name)_$(target)_int8_sym.bmodel
+
 BM1684X:
-  deploy:
+  +deploy:
     - model_deploy.py  --mlir $(workdir)/transformed.mlir
         --quantize F32
-        --chip bm1684x
+        --chip $(target)
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.99,0.99
-        --model $(workdir)/$(name)_bm1684x_f32.bmodel
+        --model $(workdir)/$(name)_$(target)_f32.bmodel
     - model_deploy.py  --mlir $(workdir)/transformed.mlir
         --quantize F16
-        --chip bm1684x
+        --chip $(target)
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.95,0.85
-        --model $(workdir)/$(name)_bm1684x_f16.bmodel
+        --model $(workdir)/$(name)_$(target)_f16.bmodel
     - model_deploy.py --mlir $(workdir)/transformed.mlir
         --quantize BF16
-        --chip bm1684x
+        --chip $(target)
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.95,0.85
-        --model $(workdir)/$(name)_bm1684x_bf16.bmodel
+        --model $(workdir)/$(name)_$(target)_bf16.bmodel
     - model_deploy.py --mlir $(workdir)/transformed.mlir
         --quantize INT8
         --calibration_table $(home)/cali_table
         --quant_input
         --quant_output
-        --chip bm1684x
+        --chip $(target)
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.95,0.72
-        --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel
+        --model $(workdir)/$(name)_$(target)_int8_sym.bmodel

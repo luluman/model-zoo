@@ -1,0 +1,62 @@
+---
+
+name: big_transfer
+
+gops: [8.8542]
+shapes:
+  - [1, 3, 224, 224]
+
+mlir_transform:
+  model_transform.py
+    --model_name $(name)
+    --model_def $(home)/$(name).onnx
+    --test_input $(root)/dataset/samples/cat.jpg
+    --input_shapes [$(shape_param)]
+    --resize_dims 256,256
+    --mean 123.675,116.28,103.53
+    --scale 0.0171,0.0175,0.0174
+    --pixel_format rgb
+    --test_result $(workdir)/$(name)_top_outputs.npz
+    --mlir $(workdir)/$(name).mlir
+
+mlir_calibration:
+  run_calibration.py $(workdir)/$(name).mlir
+    --dataset $(imagenet2012_mlir_cali_set)
+    --input_num 10
+    -o $(home)/cali_table
+
+BM1684X:
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/$(name).mlir
+       --quantize F32
+       --chip $(target)
+       --tolerance 0.99,0.99
+       --test_input $(workdir)/$(name)_in_f32.npz
+       --test_reference $(workdir)/$(name)_top_outputs.npz
+       --model $(workdir)/$(name)_$(target)_f32.bmodel
+
+    - model_deploy.py  --mlir $(workdir)/$(name).mlir
+       --quantize F16
+       --chip bm1684x
+       --tolerance 0.95,0.85
+       --test_input $(workdir)/$(name)_in_f32.npz
+       --test_reference $(workdir)/$(name)_top_outputs.npz
+       --model $(workdir)/$(name)_bm1684x_f16.bmodel
+
+    - model_deploy.py  --mlir $(workdir)/$(name).mlir
+       --quantize BF16
+       --chip bm1684x
+       --tolerance 0.95,0.85
+       --test_input $(workdir)/$(name)_in_f32.npz
+       --test_reference $(workdir)/$(name)_top_outputs.npz
+       --model $(workdir)/$(name)_bm1684x_Bf16.bmodel
+
+    - model_deploy.py  --mlir $(workdir)/$(name).mlir
+       --quantize INT8
+       --calibration_table $(home)/cali_table
+       --quant_input
+       --quant_output
+       --chip $(target)
+       --test_input $(workdir)/$(name)_in_f32.npz
+       --test_reference $(workdir)/$(name)_top_outputs.npz
+       --model $(workdir)/$(name)_$(target)_int8_sym.bmodel

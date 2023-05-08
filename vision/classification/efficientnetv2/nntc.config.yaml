@@ -56,12 +56,14 @@ dataset:
   image_label: $(imagenet2012_caffe_val_ground_truth)
   mean: [123.675, 116.28, 103.53]
   scale: [0.0171247538, 0.0175070028, 0.0174291938]
+  resize_dims: 256
+  crop_dims: 224
   size: 288
   trans: True
   bgr2rgb: True
 
 harness:
-  type: efficientnetv2
+  type: topk
   args:
     - name: FP32
       bmodel: $(workdir)/1b.fp.compilation/compilation.bmodel

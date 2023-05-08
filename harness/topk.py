@@ -118,14 +118,25 @@ class Runner:
                 raise RuntimeError('File not exist')
             img = cv2.imread(path)
 
-            resized = resize(img, 256)
-            cropped = center_crop(resized, self.size)
+            if self.config.get('bgr2rgb'):
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+            if self.config.get('resize_dims') != 0:
+                img = resize(img, self.config.get('resize_dims'))
+
+            if self.config.get('crop_dims') != 0:
+                cropped = center_crop(img, self.config.get('crop_dims'))
+                cropped = resize(cropped, self.size)
+            else:
+                cropped = center_crop(img, self.size)
+
             data = cropped.astype(np.float32)
             if 'mean' in self.config:
                 data -= self.config['mean']
             if 'scale' in self.config:
                 data *= self.config['scale']
-            data = data.transpose([2, 0, 1])
+            if self.config.get('trans'):
+                data = data.transpose([2, 0, 1])
 
             dtype = np.float32
             if not is_fp32:
@@ -205,7 +216,14 @@ def harness_main(tree, config, args):
     scale = input_config['scale']
     mean = input_config['mean']
     size = input_config['size']
-    pre_config = dict(mean=mean, scale=scale, size=size)
+
+    trans = input_config.get('trans', False)
+    bgr2rgb = input_config.get('bgr2rgb', False)
+    resize_dims = input_config.get('resize_dims', 0)
+    crop_dims = input_config.get('crop_dims', 0)
+
+    pre_config = dict(mean=mean, scale=scale, size=size, trans=trans, bgr2rgb=bgr2rgb, resize_dims=resize_dims,
+                      crop_dims=crop_dims)
     val_path = tree.expand_variables(config, input_config['image_path'])
     list_file = tree.expand_variables(config, input_config['image_label'])
     bmodel = tree.expand_variables(config, args['bmodel'])
@@ -228,12 +246,18 @@ def main():
     parser.add_argument(
         '--mean', required=True, type=str, help='Mean value like 128,128,128')
     parser.add_argument(
-        '--scale', required=True, type=float, help='Float scale value')
+        '--scale', required=True, type=str, help='Scale value like 1,1,1')
     parser.add_argument(
-        '--size', required=True, type=int, help='Crop size. (Resized to 256 then crop)')
+        '--size', required=True, type=int, help='Input size')
+    parser.add_argument(
+        '--resize_dims', required=True, type=int, help='Resize size before center crop (default 256).')
+    parser.add_argument(
+        '--crop_dims', required=True, type=int, help='Crop size (default is the value of --size).')
     parser.add_argument('--threads', type=int, default=4)
     parser.add_argument('--devices', '-d', type=int, nargs='*', help='Devices',
         default=[0])
+    parser.add_argument('--trans', type=str, default=True, help='default True do transpose to align with opencv format')
+    parser.add_argument('--bgr2rgb', type=str, default=True, help="default True to convert image into rgb format")
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -242,7 +266,12 @@ def main():
     mean = [float(v) for v in args.mean.split(',')]
     if len(mean) != 3:
         mean = mean[:1] * 3
-    config = dict(mean=mean, scale=args.scale, size=args.size)
+    scale = [float(v) for v in args.scale.split(',')]
+    if len(scale) != 3:
+        scale = scale[:1] * 3
+
+    config = dict(mean=mean, scale=scale, size=args.size, trans=args.trans, bgr2rgb=args.bgr2rgb,
+                  resize_dims=args.resize_dims, crop_dims=args.crop_dims)
     print(config)
     runner = Runner(args.bmodel, args.devices, args.image_path, args.list_file, config, args.threads)
     runner.join()

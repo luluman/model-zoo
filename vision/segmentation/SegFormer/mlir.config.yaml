@@ -1,0 +1,56 @@
+---
+
+name: SegFormer
+gops: [17.41]
+shapes:
+  - [1, 3, 512, 512]
+
+BM1684X:
+  mlir_transform:
+    model_transform.py
+      --model_name $(name)
+      --model_def $(home)/segformer.onnx
+      --test_input $(home)/data/segformer_img.npz
+      --input_shapes [$(shape_param)]
+      --tolerance 0.99,0.99
+      --test_result $(name)_top_outputs.npz
+      --mlir $(workdir)/transformed.mlir
+
+  # mlir_calibration:
+  #  run_calibration.py $(workdir)/transformed.mlir
+  #    --dataset $(home)/data
+  #    --input_num 1
+  #    -o $(workdir)/$(name).calitable
+
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/transformed.mlir
+        --quantize F32
+        --chip bm1684x
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.99,0.99
+        --model $(workdir)/$(name)_bm1684x_f32.bmodel
+    - model_deploy.py --mlir $(workdir)/transformed.mlir
+        --quantize F16
+        --chip bm1684x
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.95,0.85
+        --model $(workdir)/$(name)_bm1684x_f16.bmodel
+    - model_deploy.py --mlir $(workdir)/transformed.mlir
+        --quantize BF16
+        --chip bm1684x
+        --test_input $(workdir)/$(name)_in_f32.npz
+        --test_reference $(name)_top_outputs.npz
+        --tolerance 0.95,0.85
+        --model $(workdir)/$(name)_bm1684x_bf16.bmodel
+    # - model_deploy.py --mlir $(workdir)/transformed.mlir
+    #     --quantize INT8
+    #     --calibration_table $(home)/$(name).calitable
+    #     --chip bm1684x
+    #     --test_input $(workdir)/$(name)_in_f32.npz
+    #     --test_reference $(name)_top_outputs.npz
+    #     --tolerance 0.95,0.85
+    #     --quant_input
+    #     --quant_output
+    #     --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel

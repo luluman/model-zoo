@@ -23,17 +23,49 @@ mlir_calibration:
   run_calibration.py $(workdir)/$(name).mlir
     --dataset $(imagenet2012_mlir_cali_set)
     --input_num 200
-    -o $(home)/$(name)_cali_table
+    -o $(workdir)/$(name)_cali_table
 
-BM1684X:
-  deploy:
+deploy:
+  - model_deploy.py --mlir $(workdir)/$(name).mlir
+      --quantize F32
+      --chip $(target)
+      --test_input $(workdir)/$(name)_in_f32.npz
+      --test_reference $(name)_top_outputs.npz
+      --tolerance 0.99,0.99
+      --model $(workdir)/$(name)_$(target)_f32.bmodel
+
+BM1684:
+  +deploy:
     - model_deploy.py --mlir $(workdir)/$(name).mlir
-        --quantize F32
-        --chip bm1684x
+        --quantize INT8
+        --calibration_table $(workdir)/$(name)_cali_table
+        --quantize_table $(home)/1684_mix_table.txt
+        --chip $(target)
         --test_input $(workdir)/$(name)_in_f32.npz
         --test_reference $(name)_top_outputs.npz
-        --tolerance 0.99,0.99
-        --model $(workdir)/$(name)_bm1684x_f32.bmodel
+        --tolerance 0.8,0.35
+        --model $(workdir)/$(name)_$(target)_int8_sym.bmodel
+  harness:
+    type: topk
+    args:
+      - name: FP32
+        bmodel: $(workdir)/$(name)_bm1684_f32.bmodel
+      - name: INT8
+        bmodel: $(workdir)/$(name)_bm1684_int8_sym.bmodel
+
+dataset:
+  image_path: $(imagenet2012_val_set)
+  image_label: $(imagenet2012_caffe_val_ground_truth)
+  mean: [123.675, 116.28, 103.53]
+  scale: [0.0171247538, 0.0175070028, 0.0174291938]
+  resize_dims: 256
+  crop_dims: 224
+  size: 288
+  trans: True
+  bgr2rgb: True
+
+BM1684X:
+  +deploy:
     - model_deploy.py --mlir $(workdir)/$(name).mlir
         --quantize F16
         --chip bm1684x
@@ -49,20 +81,12 @@ BM1684X:
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.95,0.69
         --model $(workdir)/$(name)_bm1684x_int8_sym.bmodel
-
-  dataset:
-    image_path: $(imagenet2012_val_set)
-    image_label: $(imagenet2012_caffe_val_ground_truth)
-    mean: [123.675, 116.28, 103.53]
-    scale: [0.0171247538, 0.0175070028, 0.0174291938]
-    size: 288
-    trans: True
-    bgr2rgb: True
-
   harness:
-    type: efficientnetv2
+    type: topk
     args:
       - name: FP32
         bmodel: $(workdir)/$(name)_bm1684x_f32.bmodel
+      - name: FP16
+        bmodel: $(workdir)/$(name)_bm1684x_f16.bmodel
       - name: INT8
         bmodel: $(workdir)/$(name)_bm1684x_int8_sym.bmodel

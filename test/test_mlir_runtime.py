@@ -2,6 +2,7 @@ import logging
 import utils
 import pytest
 import subprocess
+import platform
 
 @pytest.mark.runtime
 @pytest.mark.mlir
@@ -15,6 +16,7 @@ def test_mlir_runtime(target, mlir_runtime):
     logging.info(cmd)
     subprocess.run(cmd, shell=True, check=True)
 
+@pytest.mark.skipif(platform.machine() == 'aarch64', reason='Aarch64 machines do not test model precision!')
 @pytest.mark.runtime
 @pytest.mark.mlir
 def test_mlir_precision_BM1684X(target, mlir_runtime, get_imagenet_val, get_cifar100, get_coco2017_val):

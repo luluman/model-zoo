@@ -1,7 +1,7 @@
 ---
 
 name: GRU
-gops: 65.921
+gops: 0.277
 
 time: true
 
@@ -14,12 +14,12 @@ int8_weight: $(workdir)/$(name)_bmnetp.int8umodel
 
 BM1684:
   fp_loops:
-    - build_env: [  ]
+    - build_env: [ ]
       opt: "1"
       dyn: "False"
       fp_outdir_template: "static.opt1.fp32.{}b.compilation"
       prec: FP32
-    - build_env: [  ] 
+    - build_env: [ ]
       opt: "2"
       dyn: "True"
       fp_outdir_template: "dynamic.opt2.fp32.{}b.compilation"
@@ -27,12 +27,12 @@ BM1684:
 
 BM1684X:
   fp_loops:
-    - build_env: [  ]
+    - build_env: [ ]
       opt: "1"
       dyn: "False"
       fp_outdir_template: "static.opt1.fp32.{}b.compilation"
       prec: FP32
-    - build_env: [  ] 
+    - build_env: [ ]
       opt: "2"
       dyn: "True"
       fp_outdir_template: "dynamic.opt2.fp32.{}b.compilation"

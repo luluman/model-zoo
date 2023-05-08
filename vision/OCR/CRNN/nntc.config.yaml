@@ -7,6 +7,9 @@ model: $(home)/crnn.pt
 int8_model: $(workdir)/$(name)_bmnetp_deploy_int8_unique_top.prototxt
 int8_weight: $(workdir)/$(name)_bmnetp.int8umodel
 
+time: true
+runtime_cmp: false
+
 fp_compile_options:
   python3 -m bmnetp
   --model $(model)

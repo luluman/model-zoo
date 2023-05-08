@@ -3,14 +3,22 @@
 DIR="$(dirname "$(realpath "$0")")"
 DIR="$(realpath $DIR/../..)"
 
+fn_list=/tmp/lfs-files.list
+
 function check()
 {
     local fn=$1
+    grep ${fn#./} $fn_list > /dev/null || {
+        echo $fn should upload via lfs, not found in ls-files
+        exit 1
+    }
     git check-attr --all -- $fn  | grep lfs > /dev/null || {
         echo $fn should upload via lfs
         exit 1
     }
 }
+
+git lfs ls-files > $fn_list
 
 while read fn; do check $fn; done < <(find -type f -name *.caffemodel)
 while read fn; do check $fn; done < <(find -type f -name *.prototxt)

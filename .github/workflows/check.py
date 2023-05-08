@@ -347,7 +347,7 @@ def rows_from_readme(path):
                 row[3] = bool(row[3])
 
                 if check_order:
-                    assert row[0].lower() > rows[-1][0].lower(), \
+                    assert row[0].lower() >= rows[-1][0].lower(), \
                         f'Order matters, please relocate {row[0]}'
                 check_order = True
                 rows.append(row)

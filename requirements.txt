@@ -4,3 +4,6 @@ pycocotools
 scikit-learn
 torch<=1.13+cpu
 torchvision<=0.14
+tqdm
+six
+transformers<=4.23.0
