@@ -112,3 +112,4 @@ vision/video-recognition/TSN
 vision/segmentation/BiSeNet
 vision/segmentation/SegFormer
 language/generative/gpt2
+vision/generative/stable_diffusion

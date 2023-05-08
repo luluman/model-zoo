@@ -1,0 +1,22 @@
+---
+
+name: StableDiffusion_decode
+gops: [2525.533978624]
+time: true
+
+shapes:
+  - [1, 4, 64, 64]
+
+mlir_transform:
+  model_transform.py
+    --model_name $(name)
+    --model_def $(home)/$(name).onnx
+    --input_shapes [$(shape_param)]
+    --mlir $(workdir)/$(name).mlir
+
+BM1684X:
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/$(name).mlir
+       --quantize F16
+       --chip $(target)
+       --model $(workdir)/$(name)_$(target)_f16.bmodel

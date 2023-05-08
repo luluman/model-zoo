@@ -1,0 +1,22 @@
+---
+
+name: StableDiffusion_text_encoder
+gops: [13.346263470]
+time: true
+
+shapes:
+  - [1, 77]
+
+mlir_transform:
+  model_transform.py
+    --model_name $(name)
+    --model_def $(home)/$(name).onnx
+    --input_shapes [$(shape_param)]
+    --mlir $(workdir)/$(name).mlir
+
+BM1684X:
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/$(name).mlir
+       --quantize F32
+       --chip $(target)
+       --model $(workdir)/$(name)_$(target)_f32.bmodel

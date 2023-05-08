@@ -1,0 +1,26 @@
+---
+
+name: StableDiffusion_unet
+gops: [1618.663232834]
+time: true
+
+shapes:
+  - [[2, 4, 64, 64], [1], [2, 77, 768]]
+
+concat_files:
+  - inputs: ['$(home)/$(name).pt-*']
+    output: '$(name).pt'
+
+mlir_transform:
+  model_transform.py
+    --model_name unet
+    --model_def $(workdir)/$(name).pt
+    --input_shapes [$(shape_param)]
+    --mlir $(workdir)/$(name).mlir
+
+BM1684X:
+  deploy:
+    - model_deploy.py  --mlir $(workdir)/$(name).mlir
+       --quantize F16
+       --chip $(target)
+       --model $(workdir)/$(name)_$(target)_f16.bmodel
