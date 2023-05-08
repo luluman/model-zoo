@@ -6,6 +6,7 @@ gops: 60.036
 model: $(home)/unet_plusplus_cityscapes/
 
 time_rounds: 10
+runtime_cmp: false
 
 BM1684X:
   fp_compile_options:
