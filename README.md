@@ -98,15 +98,15 @@ python3 .github/workflows/check.py
 |mtcnn\_pnet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
 |mtcnn\_rnet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
 |openpose                         |[vision/pose-estimation/openpose](vision/pose-estimation/openpose)                                    |:white\_check\_mark:|:white\_check\_mark:|
-|paddle\_humansegv1\_lite         |[vision/segmentation/paddle\_humansegv1\_lite](vision/segmentation/paddle_humansegv1_lite)            |:white\_check\_mark:|                    |
 |pointpillars                     |[vision/detection/pointpillars](vision/detection/pointpillars/)                                       |                    |:white\_check\_mark:|
 |PP-OCRv3\_det                    |[vision/OCR/OCRv3\_paddle](vision/OCR/OCRv3_paddle)                                                   |                    |:white\_check\_mark:|
 |PP-OCRv3\_rec                    |[vision/OCR/OCRv3\_paddle](vision/OCR/OCRv3_paddle)                                                   |                    |:white\_check\_mark:|
 |PP-OCRv3cls                      |[vision/OCR/PP-OCRv3cls](vision/OCR/PP-OCRv3cls)                                                      |:white\_check\_mark:|                    |
 |PP-OCRv3det                      |[vision/OCR/PP-OCRv3det](vision/OCR/PP-OCRv3det)                                                      |:white\_check\_mark:|:white\_check\_mark:|
 |PP-OCRv3rec                      |[vision/OCR/PP-OCRv3rec](vision/OCR/PP-OCRv3rec)                                                      |                    |:white\_check\_mark:|
-|pp\_humanseg\_lite\_mini         |[vision/segmentation/paddle\_humansegv1\_lite](vision/segmentation/paddle_humansegv1_lite)            |:white\_check\_mark:|                    |
-|pp\_humansegv2\_mobile           |[vision/segmentation/pp-humanseg](vision/segmentation/pp-humanseg)                                    |                    |:white\_check\_mark:|
+|pp\_humansegv1\_lite\_argmax     |[vision/segmentation/pp\_humansegv1\_lite](vision/segmentation/pp_humansegv1_lite)                    |:white\_check\_mark:|                    |
+|pp\_humansegv1\_lite\_softmax    |[vision/segmentation/pp\_humansegv1\_lite](vision/segmentation/pp_humansegv1_lite)                    |:white\_check\_mark:|                    |
+|pp\_humansegv2\_mobile           |[vision/segmentation/pp_humansegv2_mobile](vision/segmentation/pp_humansegv2_mobile)                  |                    |:white\_check\_mark:|
 |pp\_liteseg                      |[vision/segmentation/pp\_liteseg](vision/segmentation/pp_liteseg)                                     |:white\_check\_mark:|:white\_check\_mark:|
 |pp\_picodet\_s                   |[vision/detection/pp-picodet](vision/detection/pp-picodet)                                            |                    |:white\_check\_mark:|
 |ppocr\_mobile\_v2.0\_cls         |[vision/OCR/OCRv3\_paddle](vision/OCR/OCRv3_paddle)                                                   |                    |:white\_check\_mark:|

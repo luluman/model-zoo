@@ -43,7 +43,7 @@ vision/detection/ppyolo
 vision/detection/ppyoloe
 vision/detection/scrfd
 vision/detection/yoloface
-vision/segmentation/paddle_humansegv1_lite
+vision/segmentation/pp_humansegv1_lite
 vision/classification/shufflenet_v2
 vision/classification/inception_resnet_v2
 vision/classification/efficientnet-lite4
@@ -80,7 +80,7 @@ vision/tracking/GOTURN-Caffe
 vision/tracking/MDNet-Torch
 vision/tracking/SiamMask-Torch
 vision/OCR/PP-OCRv3rec
-vision/segmentation/pp-humanseg
+vision/segmentation/pp_humansegv2_mobile
 vision/detection/ppyolox
 vision/detection/ssd-mobilenet
 vision/detection/ppyolov3

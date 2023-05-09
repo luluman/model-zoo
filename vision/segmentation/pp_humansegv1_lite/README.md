@@ -13,10 +13,10 @@ Besides, PP-HumanSeg models can be deployed to products at zero cost, and it als
 It is recommended to use fastdeploy.
 
 ## Model
-| Model                 | Download                              | Shape(hw) | mIou(%) |
-| --------------------- |:------------------------------------- |:--------- |:--------|
-| PP-HumanSegV1-Lite    | [580.7 KB](human_pp_humansegv1.zip)   | 192 192   | 86.02   |
-| PP-HumanSeg-Lite-mini | [580.7 KB](pp_humanseg_lite_mini.zip) |           |         |
+| Model                      | Download                                                         | Shape(hw) | mIou(%) |
+| ---------------------------|:-----------------------------------------------------------------|:--------- |:--------|
+| pp-humansegv1-lite-softmax | [580.7 KB](human_pp_humansegv1.zip)                              | 192 192   | 86.02   |
+| pp-humansegv1-lite-argmax  | [580.6 KB](human_pp_humansegv1_lite_192x192_inference_model.zip) | 192 192   | 86.02   |
 
 ## Dataset
 

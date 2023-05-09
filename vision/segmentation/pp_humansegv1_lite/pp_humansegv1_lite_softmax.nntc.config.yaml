@@ -1,9 +1,9 @@
 ---
 
-name: pp_humanseg_lite_mini
-gops: 0.217
+name: pp_humansegv1_lite_softmax
+gops: 0.216
 
-model: $(home)/pp_humanseg_lite_mini_supervisely/
+model: $(home)/paddle_humansegv1_lite_192x192_with_softmax/
 
 fp_compile_options:
   python3 -m bmpaddle
@@ -21,7 +21,7 @@ time_only_cali:
     --cali_iterations=1
     --target=$(target)
     --input_name="x"
-    --output_name="argmax_0.tmp_0"
+    --output_name="softmax_0.tmp_0"
     --test_iterations=1
     --debug_cmd="use_fake_data_to_test;not_suspend;not_call_bmnetu"
 
