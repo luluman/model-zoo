@@ -190,7 +190,7 @@ python3 .github/workflows/check.py
 |bert\_large\_transformers-4.23.0|[language/nlp/Huggingface_bert_squadv1](language/nlp/Huggingface_bert_squadv1)|:white\_check\_mark:|                    |
 |bert\_paddle                    |[language/nlp/bert\_paddle](language/nlp/bert_paddle)                         |:white\_check\_mark:|                    |
 |ConformerEncoder                |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
-|gpt2                            |[language/generate/gpt2](language/generate/gpt2)                              |:white\_check\_mark:|                    |
+|gpt2                            |[language/generative/gpt2](language/generative/gpt2)                          |:white\_check\_mark:|                    |
 |GRU                             |[language/nlp/GRU](language/nlp/GRU)                                          |:white\_check\_mark:|:white\_check\_mark:|
 |mobilebert-tflite               |[language/nlp/mobilebert\_tflite](language/nlp/mobilebert_tflite)             |                    |:white\_check\_mark:|
 |ScoringIds                      |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |

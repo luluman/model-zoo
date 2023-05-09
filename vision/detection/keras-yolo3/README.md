@@ -16,13 +16,13 @@ YOLOv3 model.
 
 ## Dataset
 
-We use pretrained weights from pjreddie.com [here](https://pjreddie.com/media/files/yolov3-tiny.weights).
+[COCO 2017 dataset](http://cocodataset.org)
 
 ## References
 
 * This model is converted from a keras model [repository](https://github.com/qqwweee/keras-yolo3)
   using keras2onnx converter [repository](https://github.com/onnx/keras-onnx).
-* [onnx/models](https://github.com/onnx/models)
+* [onnx/models](https://github.com/onnx/models/tree/main/vision/object_detection_segmentation/tiny-yolov3)
 
 ## License
 

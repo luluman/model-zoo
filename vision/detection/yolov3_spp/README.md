@@ -18,8 +18,8 @@ YOLOv3 is a family of object detection architectures and models pretrained on th
 
 ## References
 
+* [YOLOv3: An Incremental Improvement](https://arxiv.org/abs/1804.02767v1)
 * [ultralytics/yolov3](https://github.com/ultralytics/yolov3)
-* [pjreddie.com](https://pjreddie.com/darknet/yolo/)
 
 ## License
 

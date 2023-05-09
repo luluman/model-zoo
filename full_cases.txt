@@ -111,4 +111,4 @@ vision/classification/clip-mlir
 vision/video-recognition/TSN
 vision/segmentation/BiSeNet
 vision/segmentation/SegFormer
-language/generate/gpt2
+language/generative/gpt2

@@ -17,6 +17,9 @@
     },
     {
       "pattern": "https://download.openmmlab.com/"
+    },
+    {
+      "pattern": "https://vision.eecs.yorku.ca/research/dynamic-scenes/"
     }
   ],
   "timeout": "20s",
