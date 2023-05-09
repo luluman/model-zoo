@@ -193,9 +193,6 @@ python3 .github/workflows/check.py
 |gpt2                            |[language/generate/gpt2](language/generate/gpt2)                              |:white\_check\_mark:|                    |
 |GRU                             |[language/nlp/GRU](language/nlp/GRU)                                          |:white\_check\_mark:|:white\_check\_mark:|
 |mobilebert-tflite               |[language/nlp/mobilebert\_tflite](language/nlp/mobilebert_tflite)             |                    |:white\_check\_mark:|
-|opus-mt-zh-en-decoder           |[language/translate/opus-mt-zh-en](language/translate/opus-mt-zh-en)          |:white\_check\_mark:|                    |
-|opus-mt-zh-en-encoder           |[language/translate/opus-mt-zh-en](language/translate/opus-mt-zh-en)          |:white\_check\_mark:|                    |
-|opus-mt-zh-en-init-decoder      |[language/translate/opus-mt-zh-en](language/translate/opus-mt-zh-en)          |:white\_check\_mark:|                    |
 |ScoringIds                      |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
 |TransformerDecoder              |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
 |TransformerLM                   |[language/asr/conformer](language/asr/conformer)                              |:white\_check\_mark:|                    |
