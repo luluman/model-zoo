@@ -1,10 +1,13 @@
 ---
 
 name: mm_resnet50
-gops: [2.42]
+
+gops: [2.42, 9.70]
 shapes:
   - [1, 3, 32, 32]
+  - [4, 3, 32, 32]
 
+precision: true
 model: $(home)/resnet50.onnx
 
 mlir_transform:
@@ -15,15 +18,15 @@ mlir_transform:
     --mean 129.304,124.070,112.434
     --scale 0.0146692093,0.0152923905,0.0142009145
     --pixel_format rgb
-    --test_input $(root)/dataset/npz_input/cifar100_img.npy
+    --test_input $(root)/dataset/samples/cifar100_img.png
     --test_result $(name)_top_outputs.npz
     --mlir $(workdir)/$(name).mlir
 
 mlir_calibration:
   run_calibration.py $(workdir)/$(name).mlir
     --dataset $(cifar100_mlir_cali_set)
-    --input_num 200
-    -o $(home)/$(name)_cali_table
+    --input_num 100
+    -o $(workdir)/$(name).calitable
 
 deploy:
   - model_deploy.py --mlir $(workdir)/$(name).mlir
@@ -35,7 +38,7 @@ deploy:
       --model $(workdir)/$(name)_$(target)_f32.bmodel
   - model_deploy.py --mlir $(workdir)/$(name).mlir
       --quantize INT8
-      --calibration_table $(home)/$(name)_cali_table
+      --calibration_table $(workdir)/$(name).calitable
       --quant_input
       --quant_output
       --chip $(target)
