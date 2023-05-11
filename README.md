@@ -87,7 +87,7 @@ python3 .github/workflows/check.py
 |lprnet                           |[vision/detection/lprnet](vision/detection/lprnet)                                                    |                    |:white\_check\_mark:|
 |market\_bot\_R50                 |[vision/reid/market\_bot\_R50](vision/reid/market_bot_R50)                                            |:white\_check\_mark:|:white\_check\_mark:|
 |MDNet                            |[vision/tracking/MDNet-Torch](vision/tracking/MDNet-Torch)                                            |:white\_check\_mark:|:white\_check\_mark:|
-|mm\_resnet50                     |[vision/classification/mm\_resnet50](vision/classification/mm_resnet50)                               |                    |:white\_check\_mark:|
+|mm\_resnet50                     |[vision/classification/mm\_resnet50](vision/classification/mm_resnet50)                               |:white\_check\_mark:|:white\_check\_mark:|
 |mobilenet-v2                     |[vision/classification/mobilenet-v2](vision/classification/mobilenet-v2)                              |                    |:white\_check\_mark:|
 |mobilenet\_v1                    |[vision/classification/MobileNet-Caffe-v1](vision/classification/MobileNet-Caffe-v1)                  |:white\_check\_mark:|                    |
 |mobilenetv2                      |[vision/classification/MobileNet-Caffe-v2](vision/classification/MobileNet-Caffe-v2)                  |:white\_check\_mark:|:white\_check\_mark:|
@@ -123,7 +123,6 @@ python3 .github/workflows/check.py
 |resnet18-v2                      |[vision/classification/resnet18-v2](vision/classification/resnet18-v2)                                |                    |:white\_check\_mark:|
 |resnet34                         |[vision/classification/ResNet34](vision/classification/ResNet34)                                      |:white\_check\_mark:|                    |
 |resnet34-v1-7                    |[vision/classification/resnet34-v1-7](vision/classification/resnet34-v1-7)                            |:white\_check\_mark:|:white\_check\_mark:|
-|resnet50                         |[vision/classification/mm\_resnet50](vision/classification/mm_resnet50)                               |:white\_check\_mark:|                    |
 |resnet50-caffe                   |[vision/classification/ResNet50-Caffe](vision/classification/ResNet50-Caffe)                          |:white\_check\_mark:|                    |
 |resnet50-v1-7                    |[vision/classification/resnet50-v1-7](vision/classification/resnet50-v1-7)                            |:white\_check\_mark:|:white\_check\_mark:|
 |resnet50-v2                      |[vision/classification/resnet50-v2](vision/classification/resnet50-v2)                                |                    |:white\_check\_mark:|

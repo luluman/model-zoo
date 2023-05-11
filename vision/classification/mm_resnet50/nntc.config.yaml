@@ -1,6 +1,6 @@
 ---
 
-name: resnet50
+name: mm_resnet50
 gops: 2.42
 
 model: $(home)/resnet50.onnx
