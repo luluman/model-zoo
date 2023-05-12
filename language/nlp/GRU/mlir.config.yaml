@@ -11,7 +11,6 @@ mlir_transform:
     --model_def $(home)/gru.onnx
     --test_input $(root)/dataset/npz_input/GRU_input.npy
     --input_shapes [$(shape_param)]
-    --model_format=nlp
     --test_result $(name)_top_outputs.npz
     --mlir $(workdir)/transformed.mlir
 
