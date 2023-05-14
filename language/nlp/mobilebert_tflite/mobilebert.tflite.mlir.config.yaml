@@ -10,9 +10,9 @@ mlir_transform:
   model_transform.py
     --model_name $(name)
     --model_def $(home)/lite-model_mobilebert_int8_1.tflite
-    --test_input $(root)/dataset/npz_input/squad_data.npz
     --input_shapes [$(shape_param)]
-    --model_format=nlp
+    --channel_format none
+    --test_input $(root)/dataset/npz_input/squad_data.npz
     --test_result $(name)_top_outputs.npz
     --mlir $(workdir)/transformed.mlir
 
