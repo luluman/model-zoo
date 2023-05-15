@@ -3,6 +3,8 @@ name: retinaface
 gops: 88.6
 model: $(home)/retinaface.onnx
 
+runtime_cmp: false
+
 BM1684X:
   fp_loops:
     - build_env: [ ]

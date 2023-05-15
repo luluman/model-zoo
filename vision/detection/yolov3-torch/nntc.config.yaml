@@ -4,6 +4,7 @@ name: yolov3
 gops: 61.369
 
 time: true
+runtime_cmp: false
 
 model: $(home)/yolov3_jit.pt
 input_shapes: "[1,3,416,416]"

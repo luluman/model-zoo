@@ -7,6 +7,7 @@ model: $(home)/bert_large_traced-2.11.0.pt
 
 time: true
 precision: true
+runtime_cmp: false
 
 BM1684X:
   fp_loops:

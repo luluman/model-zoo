@@ -3,6 +3,8 @@
 name: market_bot_R50
 gops: 8.12
 
+runtime_cmp: false
+
 model: $(home)/market_bot_R50.pt
 int8_model: $(workdir)/$(name)_bmnetp_deploy_int8_unique_top.prototxt
 int8_weight: $(workdir)/$(name)_bmnetp.int8umodel

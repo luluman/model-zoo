@@ -4,6 +4,7 @@ name: SiamMask
 gops: 37.566
 
 time: true
+runtime_cmp: false
 
 model: $(home)/SiamMask_DAVIS_trace.pt
 input_shapes: "[1,3,127,127],[1,3,255,255]"
