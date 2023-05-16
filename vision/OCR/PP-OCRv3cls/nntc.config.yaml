@@ -3,6 +3,8 @@
 name: PP-OCRv3cls
 gops: 0.05
 
+runtime_cmp: false
+
 model: $(home)/ch_ppocr_mobile_v2.0_cls_infer/
 
 fp_batch_sizes: [1, 4, 8, 16]

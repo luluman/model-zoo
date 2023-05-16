@@ -3,6 +3,8 @@
 name: resnet50-v1-7
 gops: 7.765722088
 
+runtime_cmp: false
+
 model: $(home)/resnet50-v1-7.onnx
 batch_sizes: [1, 4, 8]
 

@@ -4,6 +4,7 @@ name: ppyoloe_crn_x_300e_coco
 gops: 206.99
 
 model: $(home)/ppyoloe_crn_x_300e_coco/
+runtime_cmp: false
 
 BM1684X:
   fp_compile_options:

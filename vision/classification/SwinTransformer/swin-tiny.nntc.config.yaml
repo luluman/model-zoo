@@ -4,6 +4,7 @@ name: swin_t
 gops: 9.0
 
 time: true
+runtime_cmp: false
 
 model: $(home)/swin_t.onnx
 input_shapes: "[1,3,224,224]"

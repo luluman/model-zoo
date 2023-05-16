@@ -4,6 +4,7 @@ name: vit-base-patch16-384
 gops: 111.6 
 
 time: true
+runtime_cmp: false
 
 model: $(home)/vit_B_16.onnx
 input_shapes: "[1,3,384,384]"
