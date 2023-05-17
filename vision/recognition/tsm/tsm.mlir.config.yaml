@@ -29,7 +29,7 @@ BM1684X:
       --test_input=$(tiny_kinetic_dataset)/input_$(name).npz
       --test_reference=$(tiny_kinetic_dataset)/top_output_$(name).npz
       --tolerance 0.99,0.99
-      --model $(name)_$(target)_f32.bmodel
+      --model $(workdir)/$(name)_$(target)_f32.bmodel
       --debug
 
     - model_deploy.py
@@ -39,7 +39,7 @@ BM1684X:
         --test_input=$(tiny_kinetic_dataset)/input_$(name).npz
         --test_reference=$(tiny_kinetic_dataset)/top_output_$(name).npz
         --tolerance 0.95,0.85
-        --model $(name)_$(target)_f16.bmodel
+        --model $(workdir)/$(name)_$(target)_f16.bmodel
 
     - model_deploy.py
         --mlir $(workdir)/$(name).mlir
@@ -48,7 +48,7 @@ BM1684X:
         --test_input=$(tiny_kinetic_dataset)/input_$(name).npz
         --test_reference=$(tiny_kinetic_dataset)/top_output_$(name).npz
         --tolerance 0.95,0.85
-        --model $(name)_$(target)_Bf16.bmodel
+        --model $(workdir)/$(name)_$(target)_Bf16.bmodel
 
 # - model_deploy.py
 #   --mlir $(workdir)/$(name).mlir
