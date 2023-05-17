@@ -8,7 +8,7 @@ weight: $(home)/ResNet-50-model.caffemodel
 
 BM1684X:
   fp_loops:
-    - build_env: [  ]
+    - build_env: [ ]
       fp_outdir_template: "{}b.fp32.compilation"
       prec: FP32
     - build_env:
@@ -44,7 +44,9 @@ dataset:
   image_label: $(imagenet2012_caffe_val_ground_truth)
   mean: [104, 117, 123]
   scale: 1
+  resize_dims: 256
   size: 224
+  trans: true
 
 cali:
   python3 -m ufw.cali.cali_model
