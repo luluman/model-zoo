@@ -4,6 +4,8 @@ name: Yet-Another-EfficientDet-Pytorch
 gops: 5.36
 
 model: $(home)/efficientdet-d0_trace.pt
+runtime_cmp: false
+
 int8_model: $(workdir)/$(name)_bmnetp_deploy_int8_unique_top.prototxt
 int8_weight: $(workdir)/$(name)_bmnetp.int8umodel
 

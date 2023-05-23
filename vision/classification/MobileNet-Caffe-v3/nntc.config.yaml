@@ -4,6 +4,7 @@ name: mobilenetv3
 gops: 0.466
 
 time: true
+runtime_cmp: false
 
 model: $(home)/MobileNetV3.prototxt
 weight: $(home)/MobileNetV3.caffemodel

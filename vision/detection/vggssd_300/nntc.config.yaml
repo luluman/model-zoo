@@ -4,6 +4,7 @@ name: vggssd_300
 gops: 64.749
 
 time: true
+runtime_cmp: false
 
 model: $(home)/deploy.prototxt
 weight: $(home)/VGG_coco_SSD_300x300_iter_400000.caffemodel

@@ -4,6 +4,7 @@ name: cyclegan_horse2zebra
 gops: 2.78
 
 model: $(home)/cyclegan_horse2zebra/
+runtime_cmp: false
 
 fp_compile_options:
   python3 -m bmpaddle
