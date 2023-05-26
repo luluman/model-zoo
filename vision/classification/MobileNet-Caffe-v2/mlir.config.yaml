@@ -19,10 +19,9 @@ mlir_transform:
     --model_data $(weight)
     --test_input $(root)/dataset/samples/cat.jpg
     --input_shapes [$(shape_param)]
-    --resize_dims 224,224
-    --mean 123.675,116.28,103.53
-    --scale 0.0171,0.0175,0.0174
-    --pixel_format rgb
+    --resize_dims 256,256
+    --mean 103.53,116.28,123.675
+    --scale 0.0174,0.0175,0.0171
     --test_result $(name)_top_outputs.npz
     --mlir $(workdir)/transformed.mlir
 
@@ -54,12 +53,11 @@ deploy:
 dataset:
   image_path: $(imagenet2012_val_set)
   image_label: $(imagenet2012_caffe_val_ground_truth)
-  mean: [123.675, 116.28, 103.53]
-  scale: [0.0171, 0.0175, 0.0174]
+  mean: [103.53, 116.28, 123.675]
+  scale: [0.0174, 0.0175, 0.0171]
   resize_dims: 256
   size: 224
   trans: true
-  bgr2rgb: true
 
 BM1684:
   harness:
