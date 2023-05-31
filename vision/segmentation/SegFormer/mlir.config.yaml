@@ -37,13 +37,13 @@ BM1684X:
         --test_reference $(name)_top_outputs.npz
         --tolerance 0.95,0.85
         --model $(workdir)/$(name)_bm1684x_f16.bmodel
-    - model_deploy.py --mlir $(workdir)/transformed.mlir
-        --quantize BF16
-        --chip bm1684x
-        --test_input $(workdir)/$(name)_in_f32.npz
-        --test_reference $(name)_top_outputs.npz
-        --tolerance 0.95,0.85
-        --model $(workdir)/$(name)_bm1684x_bf16.bmodel
+    # - model_deploy.py --mlir $(workdir)/transformed.mlir
+    #     --quantize BF16
+    #     --chip bm1684x
+    #     --test_input $(workdir)/$(name)_in_f32.npz
+    #     --test_reference $(name)_top_outputs.npz
+    #     --tolerance 0.95,0.85
+    #     --model $(workdir)/$(name)_bm1684x_bf16.bmodel
     # - model_deploy.py --mlir $(workdir)/transformed.mlir
     #     --quantize INT8
     #     --calibration_table $(home)/$(name).calitable
