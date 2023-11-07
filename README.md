@@ -61,6 +61,7 @@ python3 .github/workflows/check.py
 |densenet                         |[vision/classification/DenseNet-Caffe](vision/classification/DenseNet-Caffe)                          |:white\_check\_mark:|                    |
 |dpn68                            |[vision/classification/dpn68](vision/classification/dpn68)                                            |:white\_check\_mark:|:white\_check\_mark:|
 |ECANet                           |[vision/classification/ECANet-Torch](vision/classification/ECANet-Torch)                              |:white\_check\_mark:|                    |
+|EDSR |[vision/super-resolution/EDSR](vision/super-resolution/EDSR) |:white\_check\_mark:|:white\_check\_mark:|
 |efficientnet-B0                  |[vision/classification/EfficientNet-B0](vision/classification/EfficientNet-B0)                        |:white\_check\_mark:|                    |
 |efficientnet-B1                  |[vision/classification/EfficientNet-B1](vision/classification/EfficientNet-B1)                        |:white\_check\_mark:|                    |
 |efficientnet-B4                  |[vision/classification/EfficientNet-B4](vision/classification/EfficientNet-B4)                        |:white\_check\_mark:|                    |
@@ -91,6 +92,8 @@ python3 .github/workflows/check.py
 |mobilenetv3                      |[vision/classification/MobileNet-Caffe-v3](vision/classification/MobileNet-Caffe-v3)                  |:white\_check\_mark:|                    |
 |mobileseg                        |[vision/segmentation/mobileseg](vision/segmentation/mobileseg)                                        |:white\_check\_mark:|                    |
 |mobileseg-mlir                   |[vision/segmentation/mobileseg](vision/segmentation/mobileseg)                                        |                    |:white\_check\_mark:|
+|MSRN |[vision/super-resolution/MSRN](vision/super-resolution/MSRN) |:white\_check\_mark:|:white\_check\_mark:|
+|MSFIN |[vision/super-resolution/MSFIN](vision/super-resolution/MSFIN) |:white\_check\_mark:|:white\_check\_mark:|
 |mtcnn\_onet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
 |mtcnn\_pnet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
 |mtcnn\_rnet                      |[vision/detection/mtcnn](vision/detection/mtcnn)                                                      |:white\_check\_mark:|:white\_check\_mark:|
