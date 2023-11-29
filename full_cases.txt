@@ -103,3 +103,6 @@ vision/detection/lprnet
 vision/recognition/tsm
 language/nlp/Huggingface_bert_squadv1
 vision/classification/resnet50-v1.5
+vision/super-resolution/EDSR
+vision/super-resolution/MSRN
+vision/super-resolution/MSFIN
